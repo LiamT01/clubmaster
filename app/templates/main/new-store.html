@@ -10,8 +10,10 @@
     </div>
 {% endblock %}
 {% block body %}
-    <br />
-    <form class="layui-form" method="post">
+<!--    <br />-->
+    <div style="text-align: left;">
+        <div class="layui-inline">
+            <form class="layui-form" method="post">
         {{ form.csrf_token }}
         <div class="layui-form-item">
             <label class="layui-form-label" style="font-size: medium">社团名称：</label>
@@ -50,6 +52,8 @@
         </div>
 <!--        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp这个页面容错也失灵啦-->
     </form>
+        </div>
+    </div>
 {% endblock %}
 {% block script %}
 <script type="text/javascript">

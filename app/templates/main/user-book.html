@@ -2,47 +2,54 @@
 {% block title %}查询图书信息{% endblock %}
 
 {% block body %}
-    <form class="layui-form" method="post" id="searchForm">
-    {{ form.csrf_token }}
-        <div class="layui-form-item">
+    <br/>
+    <div style="text-align: center">
+        <form class="layui-form" method="post" id="searchForm">
+        {{ form.csrf_token }}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label style="font-size: medium;width: 150px;" class="layui-form-label">社团名称：</label>
+                    <div class="layui-input-inline">
+                        {{ form.club_name(class="layui-input", id="club_name") }}
+                    </div>
+                    <label style="font-size: medium;width: 80px;" class="layui-form-label">社团类型：</label>
+                    <div class="layui-input-inline">
+                        {{ form.club_type(class="layui-input", id="club_type") }}
+                    </div>
+                    <div class="layui-input-inline">{{ form.submit(class="layui-btn", id="search") }}</div>
+                </div>
+            </div>
+        </form>
+
+        <div>
             <div class="layui-inline">
-                <label style="font-size: medium;width: 150px;" class="layui-form-label">社团名称：</label>
-                <div class="layui-input-inline">
-                    {{ form.club_name(class="layui-input", id="club_name") }}
-                </div>
-                <label style="font-size: medium;width: 80px;" class="layui-form-label">社团类型：</label>
-                <div class="layui-input-inline">
-                    {{ form.club_type(class="layui-input", id="club_type") }}
-                </div>
-                <div class="layui-input-inline">{{ form.submit(class="layui-btn", id="search") }}</div>
+            <table lay-even id="result" lay-filter="re" lay-data="{align:'center'}">
+            <thead>
+                <tr>
+                  <th lay-data="{field:'club_name', width:160, align:'center'}">社团名称</th>
+                  <th lay-data="{field:'club_type', width:180, align:'center'}">社团类型</th>
+                  <th lay-data="{field:'club_creator', width:160, align:'center'}">创建者</th>
+                  <th lay-data="{field:'club_desp', width:240, align:'center'}">社团描述</th>
+                  <!-- <th lay-data="{field:'club_join', width:100}">操作</th> -->
+                </tr>
+            </thead>
+              <tbody>
+                {% for club in search_res %}
+                  <tr>
+                    <td>{{club['club_name']}}</td>
+                    <td>{{club['club_type']}}</td>
+                    <td>{{club['club_creator_id']}}</td>
+                    <td>{{club['club_desp']}}</td>
+                    <!-- <td><a href="{{ url_for('main.join_club', name=club.club_name) }}">加入</a></td> -->
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
             </div>
         </div>
-    </form>
-    <div id="remove">
-    <table lay-even id="result" lay-filter="re">
-      <thead>
-        <tr>
-          <th lay-data="{field:'club_name', width:160}">社团名称</th>
-          <th lay-data="{field:'club_type', width:180}">社团类型</th>
-          <th lay-data="{field:'club_creator', width:160}">创建者</th>
-          <th lay-data="{field:'club_desp', width:240}">社团描述</th>
-          <!-- <th lay-data="{field:'club_join', width:100}">操作</th> -->
-        </tr>
-      </thead>
-      <tbody>
-        {% for club in search_res %}
-          <tr>
-            <td>{{club.club_name}}</td>
-            <td>{{club.club_type}}</td>
-            <td>{{club.club_creator}}</td>
-            <td>{{club.club_desp}}</td>
-            <!-- <td><a href="{{ url_for('main.join_club', name=club.club_name) }}">加入</a></td> -->
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
     </div>
-    <table id="test" lay-filter="test"></table>
+
+<!--    <table id="test" lay-filter="test"></table>-->
 
 {% endblock %}
 

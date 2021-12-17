@@ -5,7 +5,9 @@ from . import main
 from .forms import SearchClubForm, Register, Login, SearchBookForm, ChangePasswordForm, EditInfoForm, SearchStudentForm, NewStoreForm, StoreForm, BorrowForm
 from .. import db
 from ..models import User, Club, Member, Creator, Activity, Admin
-import time, datetime
+import time
+import datetime
+
 
 @main.route('/', methods=['GET', 'POST'])
 def home():
@@ -158,13 +160,14 @@ def new_store():
             club.club_name = request.form.get('club_name')
             club.club_type = request.form.get('club_type')
             club.club_desp = request.form.get('club_desp')
-            club.club_creator = current_user.stu_id
             user = User.query.filter_by(stu_id=current_user.stu_id).first()
             club.creator.append(user.as_creator)
             db.session.add(club)
             db.session.commit()
             flash(u'社团创建成功！')
-            session['cclubs'] = [x.club_name for x in Club.query.filter_by(club_creator=session.get('stu_id')).all()]
+            creator = User.query.get(current_user.stu_id).as_creator
+            # session['cclubs'] = [x.club_name for x in Club.query.filter(Club.creator.id == session.get('stu_id')).all()]
+            session['cclubs'] = [club.club_name for club in creator.created_clubs.all()]
     return render_template('main/new-store.html', name=session.get('name'), form=form,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))
 
@@ -191,14 +194,24 @@ def borrow():
         club_name = request.form.get('club_name')
         club_type = request.form.get('club_type')
         if club_name != '':
-            clubs = Club.query.filter_by(club_name=club_name)
-            flash('here')
-        else:
-            clubs = Club.query.filter_by(club_type=club_type)
+            clubs = Club.query.filter_by(club_name=club_name).all()
+        elif club_type != '全部':
+            clubs = Club.query.filter_by(club_type=club_type).all()
+
+    clubs = [{'club_name': club.club_name, 'club_type': club.club_type,
+              'club_desp': club.club_desp, 'club_creator_id': club.creator.first().id} for club in clubs]
+
+    if request.method == 'POST':
+        session['search_res'] = clubs
+        session['searched'] = True
+        return redirect(url_for('main.borrow'))
+
+    if not session.get('searched', False):
+        session['search_res'] = clubs
 
     return render_template('main/search.html', name=session.get('name'), form=form,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'),
-                           search_res=clubs)
+                           search_res=session['search_res'])
 
 
 @main.route('/find_stu_book', methods=['GET', 'POST'])
@@ -293,18 +306,29 @@ def find_book():
 def user_book():
     form = SearchClubForm()
     clubs = Club.query.all()
-    flash(request.method)
     if request.method == 'POST':
-        # flash('aha')
         club_name = request.form.get('club_name')
         club_type = request.form.get('club_type')
         if club_name != '':
-            clubs = Club.query.filter_by(club_name=club_name)
-        else:
-            clubs = Club.query.filter_by(club_type=club_type)
+            clubs = Club.query.filter_by(club_name=club_name).all()
+        elif club_type != '全部':
+            clubs = Club.query.filter_by(club_type=club_type).all()
+
+    clubs = [{'club_name': club.club_name, 'club_type': club.club_type,
+              'club_desp': club.club_desp, 'club_creator_id': club.creator.first().id} for club in clubs]
+
+    if request.method == 'POST':
+        session['search_res'] = clubs
+        session['searched'] = True
+        return redirect(url_for('main.user_book'))
+
+    if not session.get('searched', False):
+        session['search_res'] = clubs
+
     return render_template('main/user-book.html', name=session.get('name'), form=form,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'),
-                           search_res=clubs)
+                           search_res=session['search_res'])
+
 
 
 @main.route('/search_student', methods=['GET', 'POST'])
@@ -365,9 +389,6 @@ def storage():
     if form.validate_on_submit():
         return redirect(url_for('.storage'))
     return render_template('main/storage.html', name=session.get('name'), form=form)
-
-
-
 
 
 @main.route('/return', methods=['GET', 'POST'])

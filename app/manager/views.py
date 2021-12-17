@@ -47,7 +47,7 @@ def amenities():
     if request.method == "POST":
         if 'insert' in request.form:
             act = Activity()
-            act.creator = session['club_name']
+            act.club_name = session['club_name']
             act.act_name = request.form.get('name')
             act.act_desp = request.form.get('description')
             db.session.add(act)
@@ -57,7 +57,7 @@ def amenities():
             return redirect(url_for('manager.amenities'))
         if 'delete' in request.form:
             return redirect(url_for('manager.amenities'))
-    data = Activity.query.filter_by(creator=session['club_name']).all()
+    data = Activity.query.filter_by(club_name=session['club_name']).all()
 
     return render_template('manager_amenities.html',data=data)
 

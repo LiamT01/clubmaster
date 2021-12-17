@@ -60,7 +60,7 @@ class Club(db.Model):
     members = db.relationship('Member', secondary=members_clubs, lazy='dynamic', backref=db.backref('joined_clubs', lazy='dynamic'))
     club_type = db.Column(db.String(64))
     club_desp = db.Column(db.String(64))
-    club_creator = db.Column(db.String(64))
+    # club_creator = db.Column(db.String(64))
     activities = db.relationship('Activity', backref='club', lazy='dynamic')
 
     def __repr__(self):
