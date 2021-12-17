@@ -1,0 +1,25 @@
+{% extends "homepage_base.html" %} {% block title %}Home{% endblock %} {% block body %}
+<p id="message">
+    让您轻松管理您的俱乐部。你可以完全控制注册学生的细节，管理角色，工资等级和社团的成员。
+</p>
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message">
+                    <h1>松露</h1>
+                    <h3>让管理社团成为享受</h3>
+                    </ul>
+                    <br>
+                    <br>
+                    <a href="{{ url_for('main.register') }}" id="out">新用户？快加入吧！</a>
+                    <br>
+                    <br>
+                    <br>
+                    <a href="{{ url_for('main.login') }}" id="in">用户登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

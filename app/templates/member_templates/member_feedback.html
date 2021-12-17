@@ -1,0 +1,63 @@
+{% extends "member_index.html" %}
+{% block content %}
+<!-- Page Heading -->
+	<div class="d-sm-flex align-items-center justify-content-between mb-4">
+		<h1 class="h3 mb-0 text-gray-800" align="center" style="padding-left: 15px;"> 成员反馈 </h1>
+		<!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+	</div>
+	<form autocomplete="off" method="POST" action="{{ url_for('member.addFeedback') }}" style="box-sizing: content-box; padding-left: 15px;" >
+        <div class="form-row" style="display:grid">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">反馈主题</label>
+              <input type="text" name="subject" class="form-control" id="inputEmail4">
+            </div>
+        </div>
+         <div class="form-row">
+                <label for="inputEmail4">反馈内容</label>
+          </div>
+          <div class="form-row">
+    <textarea class="form-control" name="desc" id="description" rows="5" style="width:400px;"></textarea>
+         </div>
+         <div class="form-row" style ="padding-top: 20px">
+          
+         <input style="width:100px; border-radius:5px; border:1px solid skyblue;" name="insert" class="btn btn-primary" type="submit" value="提交" />
+         <div class="form-col" style ="padding-left: 20px">
+          <input style="width:100px; border-radius:5px; border:1px solid red; padding-left: 20px" class="btn btn-danger" type="reset" value="重做" />
+      </div>
+  </div>
+  
+</form>
+
+<hr>
+ <div class="form-row">
+    <h1 class="h3 mb-0 text-gray-800" align="center" style="padding-left: 15px;">反馈记录</h1>
+  </div>
+<hr />
+<div class="col-12 table-responsive" >
+
+                   <table class="col-12 table table-striped" >
+                     
+                     <thead class="thead-dark">
+                       <tr>
+                         <th scope="col"></th>
+                         <th scope="col"></th>
+                      </tr>
+                      
+                    </thead>
+                       <tbody>
+                       {% for x in feedback_hist %}
+                         <tr>
+                          <td>{{ x['Subject'] }}</td>
+                          <td>{{ x['Timestamp'] }}</td>
+                        </tr>
+                          <tr>
+                          <td>{{ x['Description'] }}</td>
+                         </tr>
+                       {% endfor %}
+                       </tbody>
+
+                   </table>
+                </div>
+
+<hr />
+  {% endblock %}

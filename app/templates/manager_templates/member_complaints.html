@@ -1,0 +1,37 @@
+{% extends "manager_index.html" %}
+{% block content %}
+<!-- Page Heading -->
+
+<hr>
+ <div class="form-row">
+    <h1 class="h3 mb-0 text-gray-800" align="center" style="padding-left: 15px;">反馈记录</h1>
+  </div>
+<hr />
+<div class="col-12 table-responsive" >
+
+                   <table class="col-12 table table-striped" >
+                     
+                     <thead class="thead-dark">
+                       <tr>
+                         <th scope="col"></th>
+                         <th scope="col"></th>
+                      </tr>
+                      
+                    </thead>
+                       <tbody>
+                       {% for x in complaint_history %}
+                         <tr>
+                          <td>{{ x['Subject'] }}</td>
+                          <td>{{ x['Timestamp'] }}</td>
+                        </tr>
+                          <tr>
+                          <td>{{ x['Description'] }}</td>
+                         </tr>
+                       {% endfor %}
+                       </tbody>
+
+                   </table>
+                </div>
+
+<hr />
+  {% endblock %}

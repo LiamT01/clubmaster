@@ -1,0 +1,46 @@
+{% extends "member_index.html" %}
+{% block content %}
+<div class="container-fluid">
+      
+  <title>Messages</title>
+      {% with messages = get_flashed_messages() %}
+          {% if messages %}
+              
+                  {% for message in messages %}
+                  <div class="alert alert-success" role="alert">
+                    {{ message }}.
+                  </div>
+                  {% endfor %}
+             
+          {% endif %}
+      {% endwith %}
+
+</div>
+
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Change Password </h1>
+  </div>
+    <div class="container-fluid">
+      <form action="{{ url_for('member.changepassword') }}" method="POST">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Old Password</label>
+          <input type="password"  name="oldpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+          
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">New Password</label>
+          <input type="password" name="newpassword" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Retype Password</label>
+          <input type="password" name="retypepassword"  class="form-control" id="exampleInputPassword1">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </div>
+  </div>
+  
+
+{% endblock %}

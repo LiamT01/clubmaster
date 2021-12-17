@@ -1,0 +1,123 @@
+{% extends "manager_index.html" %}
+{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add Members </h1>
+  </div>
+</div>
+<div class="container-fluid">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        
+            {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}.
+            </div>
+            {% endfor %}
+       
+    {% endif %}
+{% endwith %}
+</div>
+    <div class="container-fluid">
+    <form method="POST" action="{{ url_for('manager.add_members') }}">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputEmail4">First Name</label>
+                <input type="text" name="firstname" class="form-control" id="inputEmail4">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputPassword4">Middle Name</label>
+                <input type="text" name="middlename" class="form-control" id="inputPassword4">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputPassword4">Last Name</label>
+                <input type="text" name="lastname" class="form-control" id="inputPassword4">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail4">Email</label>
+                <input type="text" name="email" class="form-control" id="inputEmail4">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Password</label>
+                <input type="text" name="password" class="form-control" id="inputPassword4">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputEmail4">Gender</label>
+                <select id="inputState" name="gender" class="form-control">
+                    <option selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputPassword4">DOB</label>
+                <input type="date" name="dob" class="form-control" id="inputPassword4">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputPassword4">Contact No.</label>
+                <input type="text" name="contactno" class="form-control" name="contactno" id="inputPassword4">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">Address Line 1</label>
+            <input type="text" name="adl1" class="form-control" id="inputAddress">
+        </div>
+        <div class="form-group">
+            <label for="inputAddress2">Address line 2</label>
+            <input type="text" name="adl2"  class="form-control" id="inputAddress2">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="inputCity">Area</label>
+                <input type="text" name="area" class="form-control" id="inputCity">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputCity">City</label>
+                <input type="text" name="city" class="form-control" id="inputCity">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputState">State</label>
+                <select id="inputState" name="state" class="form-control">
+                    <option selected>Select State</option>
+                    <option value="Gujarat">Gujarat</option>
+                </select>
+            </div>
+           
+                <div class="form-group col-md-3">
+                    <label for="inputCity">Country</label>
+                    <select id="inputState" name="country" class="form-control">
+                        <option selected>Select Country</option>
+                        <option value="India" >India</option>
+                    </select>
+                </div>
+ 
+            <div class="form-group col-md-3">
+                <label for="inputZip">Pincode</label>
+                <input type="text" name="pincode" class="form-control" id="inputZip">
+            </div>
+        </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputEmail4">Membership</label>
+                    <select id="inputState" name="membership" class="form-control">
+                        <option selected>Select Membership</option>
+                        {% for items in membershipdata %}
+                            <option value="{{ items['MEMID'] }}">{{ items['Description']~"   -   "~items['Duration'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+            </div>
+        
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+  </div>
+{% endblock %} 

@@ -1,0 +1,151 @@
+{% extends "main/base.html" %}
+{% block title %}加入社团{% endblock %}
+
+{% block card %}<div class="layui-card-header"><h2>加入社团</h2></div>{% endblock %}
+{% block body %}
+    <form class="layui-form" method="post" id="searchForm">
+    {{ form.csrf_token }}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label style="font-size: medium;width: 150px;" class="layui-form-label">社团名称：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_name(class="layui-input", id="club_name") }}
+                </div>
+                <label style="font-size: medium;width: 80px;" class="layui-form-label">社团类型：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_type(class="layui-input", id="club_type") }}
+                </div>
+                <div class="layui-input-inline">{{ form.submit(class="layui-btn", id="search") }}</div>
+            </div>
+        </div>
+    </form>
+    <div id="remove">
+    <table lay-even id="result" lay-filter="re">
+      <thead>
+        <tr>
+          <th lay-data="{field:'club_name', width:160}">社团名称</th>
+          <th lay-data="{field:'club_type', width:180}">社团类型</th>
+          <th lay-data="{field:'club_creator', width:160}">创建者</th>
+          <th lay-data="{field:'club_desp', width:240}">社团描述</th>
+          <th lay-data="{field:'club_join', width:100}">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for club in search_res %}
+          <tr>
+            <td>{{club.club_name}}</td>
+            <td>{{club.club_type}}</td>
+            <td>{{club.club_creator}}</td>
+            <td>{{club.club_desp}}</td>
+            <td><a href="{{ url_for('main.join_club', name=club.club_name) }}">加入</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <table id="test" lay-filter="test"></table>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    layui.use(['form','table','jquery'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.$;
+
+        table.init('re', {
+              height: 390
+              ,limit: 7
+              ,page: true
+        });
+        table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+          var data = obj.data; //获得当前行数据
+          var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+          //var tr = obj.tr; //获得当前行 tr 的DOM对象
+            console.log(obj);
+          if(layEvent === 'borr'){
+            layer.confirm('确认借出吗？', function(index){
+              //obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+              //向服务端发送删除指令
+                table.reload('test', {
+                  url: "{{ url_for('main.out') }}",
+                  where: {
+                      'barcode': data.barcode,
+                      'card': $('#club_name').val(),
+                      'book_name': $('#club_type').val()
+                  }
+                });
+                layer.close(index);
+            });
+          }
+        });
+
+        // $(document).ready(function(){
+        //     $('#search').on('click',function () {
+        //         var form = new FormData(document.getElementById("searchForm"));
+        //         if($('#club_name').val() === "" && $('#club_type').val() === ""){
+        //             layui.use('layer', function(){
+        //                 var layer = layui.layer;
+        //                 layer.msg('请填写查询内容',{time: 800});
+        //             });
+        //         }
+        //         else{
+        //             $.ajax({
+        //                 url:"{{ url_for('main.find_stu_book') }}",
+        //                 type:"post",
+        //                 data:form,
+        //                 processData:false,
+        //                 contentType:false,
+        //                 success:function(data){
+                            // if(data.length !== 0){
+                            //     $('#remove').remove();
+                            //     table.render({
+                            //         elem: '#test'
+                            //         ,data:data
+                            //         ,cols: [[
+                                        // {field:'barcode', title:'图书编号', width:160}
+                                        // ,{field:'isbn', title:'ISBN', width:180}
+                                        // ,{field:'book_name', title:'书名', width:240}
+                                        // ,{field:'author', title:'作者', width:140}
+                                        // ,{field:'press', title:'出版社', width:200}
+                                        // ,{title:'操作', fixed: 'right', align:'center', toolbar: '#barDemo'}
+                                //     ]]
+                                //     ,page: true
+                                //     ,height: 380
+                                //     ,limit: 7
+                                //     ,response: {
+                                //         statusCode: 200
+                                //     }
+                                //     ,parseData: function(data){
+                                //         return {
+                                //             "code": 200,
+                                //             "msg": data.message,
+                                //             "count": data.length,
+                                //             "data": data
+                                //         };
+                                //     }
+                                // });
+
+                            // }
+                            // else {
+                            //     layui.use('layer', function(){
+                            //     var layer = layui.layer;
+                            //
+                            //     layer.msg('找不到该图书！',{time: 1000});
+                            //     });
+                            // }
+            //             }
+            //         });
+            //
+            //     }
+            //     return false;
+    //         // });
+    //     });
+    });
+    </script>
+    <script type="text/html" id="barDemo">
+      <a class="layui-btn layui-btn-sm" lay-event="borr">加入</a>
+    </script>
+{% endblock %}
+

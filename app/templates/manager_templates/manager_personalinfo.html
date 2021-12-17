@@ -1,0 +1,77 @@
+{% extends "manager_index.html" %}
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">社团信息 </h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+    </div>
+    {% include 'manager_messages.html' %}
+    <form autocomplete="off" method="POST" action="{{ url_for('manager.personalinfoscr') }}">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">社团名称</label>
+              <input type="text" name="clubname" class="form-control" id="inputEmail4" value="{{ form.club_name }}">
+            </div>
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">Middle Name</label>-->
+<!--                <input type="text" name="middlename" class="form-control" id="inputEmail4" value="{{ '' }}">-->
+<!--            </div>-->
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">Last Name</label>-->
+<!--                <input type="text" name="lastname" class="form-control" id="inputEmail4" value="{{ '' }}">-->
+<!--            </div>-->
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">社团类型</label>
+              <input type="text" name="clubtype" class="form-control" id="inputEmail4" value="{{ form.club_type }}">
+            </div>
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">生日</label>-->
+<!--                <input type="date" name="dob" class="form-control" id="inputEmail4" value="{{ '' }}">-->
+<!--            </div>-->
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">手机号</label>-->
+<!--                <input type="text" name="mobileno" class="form-control" id="inputEmail4" value="{{ '' }}">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--          <div class="form-group col-md-6">-->
+<!--            <label for="inputEmail4">邮箱</label>-->
+<!--            <input type="email" name="email" class="form-control" id="inputEmail4" value="{{ '' }}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-6">-->
+<!--            <label for="inputPassword4">Password</label>-->
+<!--            <input type="password" name="password" class="form-control" id="inputPassword4" value="{{ form.password }}">-->
+<!--          </div>-->
+        </div>
+        <div class="form-group">
+          <label for="inputAddress">社团描述</label>
+          <input type="text" name="clubdesp" class="form-control" id="inputAddress" value="{{ form.club_desp }}">
+        </div>
+<!--        <div class="form-group">-->
+<!--          <label for="inputAddress2">个人简介</label>-->
+<!--          <input type="text" name="addressline2" class="form-control" id="inputAddress2" value="{{ '' }}">-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--          <div class="form-group col-md-6">-->
+<!--            <label for="inputCity">年级</label>-->
+<!--            <input type="text" name="city" class="form-control" id="inputCity" value="{{ '' }}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-4">-->
+<!--            <label for="inputState">学院</label>-->
+<!--            <input type="text" name="state" class="form-control" id="inputAddress2" value="{{ '' }}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-2">-->
+<!--            <label for="inputZip">专业</label>-->
+<!--            <input type="text" name="pincode" class="form-control" id="inputZip" value="{{ '' }}">-->
+<!--          </div>-->
+<!--        </div>-->
+  
+<!--        <button type="submit" name="bttn" value="{{ form.club_name }}" class="btn btn-primary">Submit</button>-->
+      </form>
+
+</div>
+{% endblock %}

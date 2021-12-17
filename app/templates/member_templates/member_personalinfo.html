@@ -1,0 +1,77 @@
+{% extends "member_index.html" %}
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800"> 社团信息 </h1>
+      <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+    </div>
+    {% include 'member_messages.html' %}
+    <form autocomplete="off" method="POST" action="{{ url_for('member.personalinfo') }}">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">社团名称</label>
+              <input type="text" name="firstname" class="form-control" id="inputEmail4" value="{{ form.club_name }}">
+            </div>
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">Middle Name</label>-->
+<!--                <input type="text" name="middlename" class="form-control" id="inputEmail4" value="{{ 'middle_name' }}">-->
+<!--            </div>-->
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">Last Name</label>-->
+<!--                <input type="text" name="lastname" class="form-control" id="inputEmail4" value="{{ 'last_name' }}">-->
+<!--            </div>-->
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">社团类型</label>
+              <input type="text" name="gender" class="form-control" id="inputEmail4" value="{{ form.club_type }}">
+            </div>
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">DOB</label>-->
+<!--                <input type="date" name="dob" class="form-control" id="inputEmail4" value="{{ 'dob' }}">-->
+<!--            </div>-->
+<!--            <div class="form-group col-md-4">-->
+<!--                <label for="inputEmail4">Mobile No</label>-->
+<!--                <input type="text" name="mobileno" class="form-control" id="inputEmail4" value="{{ 'contact_no' }}">-->
+<!--            </div>-->
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">社团描述</label>
+            <input type="text" name="email" class="form-control" id="inputEmail4" value="{{ form.club_desp }}">
+          </div>
+<!--          <div class="form-group col-md-6">-->
+<!--            <label for="inputPassword4">Password</label>-->
+<!--            <input type="password" name="password" class="form-control" id="inputPassword4" value="{{ form.password }}">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--          <label for="inputAddress">Address Line1</label>-->
+<!--          <input type="text" name="addressline1" class="form-control" id="inputAddress" value="{{ 'address_line_1' }}">-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--          <label for="inputAddress2">Address Line2</label>-->
+<!--          <input type="text" name="addressline2" class="form-control" id="inputAddress2" value="{{ 'address_line_2' }}">-->
+<!--        </div>-->
+<!--        <div class="form-row">-->
+<!--          <div class="form-group col-md-6">-->
+<!--            <label for="inputCity">City</label>-->
+<!--            <input type="text" name="city" class="form-control" id="inputCity" value="{{ 'city' }}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-4">-->
+<!--            <label for="inputState">State</label>-->
+<!--            <input type="text" name="state" class="form-control" id="inputAddress2" value="{{ 'state' }}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-2">-->
+<!--            <label for="inputZip">Pincode</label>-->
+<!--            <input type="text" name="pincode" class="form-control" id="inputZip" value="{{ 'pincode' }}">-->
+<!--          </div>-->
+        </div>
+  
+<!--        <button type="submit" name="bttn" value="{{ form.admin_id }}" class="btn btn-primary">Submit</button>-->
+      </form>
+
+</div>
+{% endblock %}
