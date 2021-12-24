@@ -22,14 +22,15 @@
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
-<div class="layui-header layui-bg-cyan">
-  <div class="layui-logo"><span style="color:#F0F0F0;font-size: large">松露</span></div>
+<div class="layui-header">
+  <div class="layui-logo"><span style="color:#7d7d7d;font-size: large">松露</span></div>
     <ul class="layui-nav layui-layout-right">
-      <li class="layui-nav-item"><a class='aa' href="{{ url_for('main.home') }}">主页</a></li>
+            <li class="layui-nav-item"><a class='aa' href="{{ url_for('main.home') }}">主页</a></li>
       <li class="layui-nav-item"><a class="aa" href="{{ url_for('main.register') }}">注册</a></li>
       <li class="layui-nav-item"><a class="aa" href="{{ url_for('main.login') }}">登录</a></li>
 <!--      <li class="layui-nav-item"><a class="aa" href="{{ url_for('main.user_student') }}">学生信息查询</a></li>-->
       <li class="layui-nav-item"><a class="aa" href="{{ url_for('main.user_book') }}">社团信息查询</a></li>
+
     </ul>
   </div>
 </div>

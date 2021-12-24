@@ -22,8 +22,10 @@ def index(name):
 @manager.route('/personalinfo')
 @login_required
 def personalinfo():
-    form = Club.query.filter_by(club_name=session['club_name']).first()
-    return render_template('manager_personalinfo.html', form=form)
+    club = Club.query.filter_by(club_name=session['club_name']).first()
+    return render_template('manager_personalinfo.html', club=club, name=session.get('name'),
+                           cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))
+
 
 @manager.route('/personalinfoscr',methods=['POST'])
 @login_required
@@ -44,6 +46,7 @@ def approve_leaveapplications():
 @manager.route('/amenities',methods=['GET','POST'])
 @login_required
 def amenities():
+    club = Club.query.filter_by(club_name=session['club_name']).first()
     if request.method == "POST":
         if 'insert' in request.form:
             act = Activity()
@@ -59,7 +62,7 @@ def amenities():
             return redirect(url_for('manager.amenities'))
     data = Activity.query.filter_by(club_name=session['club_name']).all()
 
-    return render_template('manager_amenities.html',data=data)
+    return render_template('manager_amenities.html', data=data, club=club)
 
 ############################################################# ADD & VIEW EMPLOYEES
 @manager.route('/addemployees',methods=['GET','POST'])
@@ -82,12 +85,13 @@ def view_employees():
 @manager.route('/addmembers',methods=['GET','POST'])
 @login_required
 def add_members():
+    club = Club.query.filter_by(club_name=session['club_name']).first()
     if request.method =="POST":
         flash("Employee Added")
         return "POST"
 
     membershipdata = []
-    return render_template("manager_addmembers.html",membershipdata=membershipdata)
+    return render_template("manager_addmembers.html", membershipdata=membershipdata, club=club)
 
 
 @manager.route('/empdetails')
@@ -100,8 +104,9 @@ def empdetails():
 @manager.route('/memberdetails')
 @login_required
 def memberdetails():
+    club = Club.query.filter_by(club_name=session['club_name']).first()
     MemDetail = []
-    return render_template('m_member_details.html', MemDetail=MemDetail)
+    return render_template('m_member_details.html', MemDetail=MemDetail, club=club)
 
 
 @manager.route('/managerpayments',methods=['GET','POST'])
@@ -119,14 +124,16 @@ def emp_complaint_hist():
 @manager.route('/MemComplaints')
 @login_required
 def mem_complaint_history():
+    club = Club.query.filter_by(club_name=session['club_name']).first()
     complaint_history = []
-    return render_template('member_complaints.html',complaint_history=complaint_history)
+    return render_template('member_complaints.html',complaint_history=complaint_history, club=club)
 
 @manager.route('/ViewFeedbacks')
 @login_required
 def mem_feedbacks():
+    club = Club.query.filter_by(club_name=session['club_name']).first()
     feedbacks = []
-    return render_template('manager_feedbacks.html',feedbacks=feedbacks)
+    return render_template('manager_feedbacks.html',feedbacks=feedbacks, club=club)
 
 
 
