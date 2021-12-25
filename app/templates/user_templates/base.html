@@ -25,40 +25,55 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <a href="{{ url_for('manager.index', name=club.club_name) }}"><div class="layui-logo">松露-社团主页</div></a>
+    <a href="{{ url_for('user.index') }}"><div class="layui-logo">松露-个人主页</div></a>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item"><a href="{{ url_for('main.index') }}">个人主页</a></li>
-      <li class="layui-nav-item"><a href="{{ url_for('main.logout') }}">退出登录</a></li>
+      <li class="layui-nav-item">
+        <a href="javascript:;">
+          <img src="../static/icon.jpg" class="layui-nav-img">
+          {{ name }}
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="{{ url_for('user.user_info', id=current_user.stu_id) }}">个人信息</a></dd>
+          <dd><a href="{{ url_for('user.change_password') }}">修改密码</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item"><a href="{{ url_for('user.logout') }}">退出登录</a></li>
     </ul>
   </div>
 
   <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+      <ul class="layui-nav layui-nav-tree lay"  lay-filter="test">
         <li class="layui-nav-item">
-            <a href="{{ url_for('manager.personalinfo') }}">社团信息</a>
-        <li class="layui-nav-item">
-          <a href="{{ url_for('manager.amenities') }}">活动管理</a>
-        </li>
-          <li class="layui-nav-item">
-          <a class="" href="javascript:;">社团成员</a>
+          <a class="" href="javascript:;">社团管理</a>
           <dl class="layui-nav-child">
               <dd>
-                    <dl class="layui-nav-item">
-                         <dd><a  href="{{ url_for('manager.add_members') }}"> 添加成员 </a></dd>
+                  <a>我创建的</a>
+                    <dl class="layui-nav-child">
+                        {% for club in cclubs %}
+                         <dd><a  href="{{ url_for('manager.index', name=club) }}"> {{club}} </a></dd>
+                        {% endfor %}
                     </dl>
               </dd>
               <dd>
-                  <dl class="layui-nav-item">
-                      <dd><a  href="{{ url_for('manager.memberdetails') }}"> 成员概览 </a></dd>
+                  <a>我加入的</a>
+                  <dl class="layui-nav-child">
+                      {% for club in mclubs %}
+                      <dd><a  href="{{ url_for('member.index', name=club) }}"> {{club}} </a></dd>
+                      {% endfor %}
                   </dl>
               </dd>
            </dl>
         </li>
         <li class="layui-nav-item">
-          <a href="{{ url_for('manager.mem_complaint_history') }}">成员反馈</a>
+            <a href="{{ url_for('user.change_info') }}">个人信息设置</a>
+        <li class="layui-nav-item">
+          <a href="{{ url_for('user.create_club') }}">新建社团</a>
+        </li>
+        <li class="layui-nav-item">
+          <a href="{{ url_for('user.search') }}">加入社团</a>
         </li>
       </ul>
     </div>
@@ -91,6 +106,8 @@
 layui.use('element', function(){
   var element = layui.element;
   element.init();
+
+
 });
 </script>
 

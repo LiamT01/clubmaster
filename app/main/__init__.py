@@ -1,7 +1,7 @@
 from flask import Blueprint
 main = Blueprint('main', __name__,
-                 template_folder="../templates/auth_templates",
-                 static_folder="../static/auth_static",
+                 template_folder="../templates/main_templates",
+                 static_folder="../static/main_static",
                  url_prefix='/'
                  )
 

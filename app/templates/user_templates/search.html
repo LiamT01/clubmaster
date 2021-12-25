@@ -1,0 +1,72 @@
+{% extends "user_templates/base.html" %}
+{% block title %}加入社团{% endblock %}
+
+{% block card %}<div class="layui-card-header"><h2>加入社团</h2></div>{% endblock %}
+{% block body %}
+<div style="text-align: left">
+    <form class="layui-form" method="post" id="searchForm">
+    {{ form.csrf_token }}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label style="font-size: medium;width: 150px;" class="layui-form-label">社团名称：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_name(class="layui-input", id="club_name") }}
+                </div>
+                <label style="font-size: medium;width: 80px;" class="layui-form-label">社团类型：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_type(class="layui-input", id="club_type") }}
+                </div>
+                <div class="layui-input-inline">{{ form.submit(class="layui-btn", id="search") }}</div>
+            </div>
+        </div>
+    </form>
+    <div id="remove">
+        <div class="layui-inline">
+            <table lay-even id="result" lay-filter="re">
+              <thead>
+                <tr>
+                  <th lay-data="{field:'club_name', width:160, align:'center'}">社团名称</th>
+                  <th lay-data="{field:'club_type', width:180, align:'center'}">社团类型</th>
+                  <th lay-data="{field:'club_creator', width:160, align:'center'}">创建者</th>
+                  <th lay-data="{field:'club_desp', width:240, align:'center'}">社团描述</th>
+                  <th lay-data="{field:'club_join', width:100, align:'center'}">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for club in search_res %}
+                  <tr>
+                    <td>{{club.club_name}}</td>
+                    <td>{{club.club_type}}</td>
+                    <td>{{club.club_creator_id}}</td>
+                    <td>{{club.club_desp}}</td>
+                    <td><input class="layui-btn-primary" type="button" onclick="location.href='{{ url_for('main.join_club', name=club.club_name) }}';" value="加入" style="height:25px; width:50px"/></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+<!--    <table id="test" lay-filter="test"></table>-->
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    layui.use(['form','table','jquery'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.$;
+
+        table.init('re', {
+              height: 390
+              ,limit: 7
+              ,page: true
+        });
+    });
+    </script>
+    <script type="text/html" id="barDemo">
+      <a class="layui-btn layui-btn-sm" lay-event="borr">加入</a>
+    </script>
+{% endblock %}
+

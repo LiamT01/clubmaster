@@ -1,0 +1,54 @@
+{% extends 'user_templates/base.html' %}
+{% block title %}新建社团{% endblock %}
+
+{% block card %}
+    <div class="layui-card-header">
+        <h2>新建社团</h2>
+    </div>
+{% endblock %}
+{% block body %}
+    <div style="text-align: left;">
+        <div class="layui-inline">
+            <form class="layui-form" method="post">
+        {{ form.csrf_token }}
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="font-size: medium">社团名称：</label>
+            <div class="layui-input-block">
+                {{ form.club_name(class="layui-input", style="width:100%") }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="font-size: medium">社团类型：</label>
+            <div class="layui-input-block">
+                {{ form.club_type(class="layui-input", style="width:100%") }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="font-size: medium">社团简介：</label>
+            <div class="layui-input-block">
+                {{ form.club_desp(class="layui-input", style="width:100%") }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {{ form.submit(class="layui-btn", style="width:100px;font-size:medium") }}
+            </div>
+        </div>
+    </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    layui.use(['form','jquery'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+
+    });
+    $(document).ready(function(){
+        $("#storage").on('click',function () {
+        })
+    });
+
+</script>
+{% endblock %}

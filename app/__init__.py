@@ -32,4 +32,7 @@ def create_app():
     from .member import member as member_blueprint
     app.register_blueprint(member_blueprint)
 
+    from .user import user as user_blueprint
+    app.register_blueprint(user_blueprint)
+
     return app
