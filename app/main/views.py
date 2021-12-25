@@ -55,27 +55,23 @@ def login():
 @main.route('/all_clubs', methods=['GET', 'POST'])
 def all_clubs():
     form = SearchClubForm()
-    clubs = Club.query.all()
     if request.method == 'POST':
-        club_name = request.form.get('club_name')
-        club_type = request.form.get('club_type')
-        if club_name != '':
-            clubs = Club.query.filter_by(club_name=club_name).all()
-        elif club_type != '全部':
-            clubs = Club.query.filter_by(club_type=club_type).all()
+        return redirect(url_for('main.user_book', club_name=form.club_name.data, club_type=form.club_type.data))
 
-    clubs = [{'club_name': club.club_name, 'club_type': club.club_type,
-              'club_desp': club.club_desp, 'club_creator_id': club.creator.first().id} for club in clubs]
+    club_name = request.args.get('club_name', '', type=str)
+    club_type = request.args.get('club_type', '全部', type=str)
 
-    if request.method == 'POST':
-        session['search_res'] = clubs
-        session['searched'] = True
-        return redirect(url_for('.all_clubs'))
+    if club_name != '':
+        clubs = Club.query.filter_by(club_name=club_name).all()
+    elif club_type != '全部':
+        clubs = Club.query.filter_by(club_type=club_type).all()
+    else:
+        clubs = Club.query.all()
 
-    if not session.get('searched', False):
-        session['search_res'] = clubs
+    form.club_name.data = club_name
+    form.club_type.data = club_type
 
     return render_template('main_templates/all_clubs.html', name=session.get('name'), form=form,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'),
-                           search_res=session['search_res'])
+                           search_res=clubs)
 

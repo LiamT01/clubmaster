@@ -31,8 +31,8 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return password == self.password
     
-    def __repr__(self):
-        return '<users %r>' % self.stu_name
+    # def __repr__(self):
+    #     return '<users %r>' % self.stu_name
 
 
 class Admin(UserMixin, db.Model):
@@ -63,8 +63,8 @@ class Club(db.Model):
     # club_creator = db.Column(db.String(64))
     activities = db.relationship('Activity', backref='club', lazy='dynamic')
 
-    def __repr__(self):
-        return '<Club %r>' % self.club_name
+    # def __repr__(self):
+    #     return '<Club %r>' % self.club_name
 
 
 class Activity(db.Model):
