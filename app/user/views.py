@@ -15,7 +15,7 @@ def index():
     session['cclubs'] = [x.club_name for x in c]
     session['mclubs'] = [x.club_name for x in m]
 
-    return render_template('user_templates/index.html',
+    return render_template('user_templates/index.html', name=current_user.stu_name,
                            cclubs=session.get('cclubs'),
                            mclubs=session.get('mclubs'))
 
