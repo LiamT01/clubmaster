@@ -37,9 +37,9 @@
                   <tr>
                     <td>{{club.club_name}}</td>
                     <td>{{club.club_type}}</td>
-                    <td>{{club.club_creator_id}}</td>
+                    <td>{{club.creator.first().as_user.stu_name}}</td>
                     <td>{{club.club_desp}}</td>
-                    <td><input class="layui-btn-primary" type="button" onclick="location.href='{{ url_for('main.join_club', name=club.club_name) }}';" value="加入" style="height:25px; width:50px"/></td>
+                    <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.join_club', name=club.club_name) }}';" value="加入" /></td>
                   </tr>
                 {% endfor %}
               </tbody>
