@@ -54,7 +54,7 @@
                   <a>我创建的</a>
                     <dl class="layui-nav-child">
                         {% for club in cclubs %}
-                         <dd><a  href="{{ url_for('manager.index', name=club) }}"> {{club}} </a></dd>
+                         <dd><a  href="{{ url_for('creator.index', name=club) }}"> {{club}} </a></dd>
                         {% endfor %}
                     </dl>
               </dd>
@@ -123,7 +123,7 @@ layui.use('element', function(){
 
 
 
-<!--{% include 'manager_header.html' %}-->
+<!--{% include 'header.html' %}-->
 <!--<body id="page-top">-->
 
 <!--  &lt;!&ndash; Page Wrapper &ndash;&gt;-->
@@ -156,16 +156,16 @@ layui.use('element', function(){
 
 
 <!--     &lt;!&ndash; ************************MANAGER DASHBOARD*********************** &ndash;&gt;-->
-<!--      {% if session['role'].lower() == "manager" %}-->
+<!--      {% if session['role'].lower() == "creator" %}-->
 <!--      &lt;!&ndash; Heading &ndash;&gt;-->
 <!--      &lt;!&ndash; Nav Item - Pages Collapse Menu &ndash;&gt;-->
 <!--       <li class="nav-item">-->
-<!--        <a class="nav-link collapsed" href="{{ url_for('manager.personalinfo') }}">-->
+<!--        <a class="nav-link collapsed" href="{{ url_for('creator.personalinfo') }}">-->
 <!--          <span>社团信息</span>-->
 <!--        </a>-->
 <!--      </li>-->
 <!--      <li class="nav-item">-->
-<!--        <a class="nav-link collapsed" href="{{ url_for('manager.amenities') }}">-->
+<!--        <a class="nav-link collapsed" href="{{ url_for('creator.amenities') }}">-->
 <!--          <span>活动</span>-->
 <!--        </a>-->
 <!--      </li>-->
@@ -178,9 +178,9 @@ layui.use('element', function(){
 
 
 <!--          <div class="bg-white py-2 collapse-inner rounded">-->
-<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('manager.add_members') }}">添加成员</a>&ndash;&gt;-->
-<!--            <a class="collapse-item" href="{{ url_for('manager.memberdetails') }}">成员概览</a>-->
-<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('manager.managerpayments') }}">Payments</a>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('creator.add_members') }}">添加成员</a>&ndash;&gt;-->
+<!--            <a class="collapse-item" href="{{ url_for('creator.memberdetails') }}">成员概览</a>-->
+<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('creator.managerpayments') }}">Payments</a>&ndash;&gt;-->
 <!--&lt;!&ndash;            <a class="collapse-item" href="#">Payment History</a>&ndash;&gt;-->
 <!--          </div>-->
 <!--        </div>-->
@@ -198,8 +198,8 @@ layui.use('element', function(){
 
 
 <!--&lt;!&ndash;          <div class="bg-white py-2 collapse-inner rounded">&ndash;&gt;-->
-<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('manager.add_employees') }}">Add employees</a>&ndash;&gt;-->
-<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('manager.empdetails') }}">View employees</a>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('creator.add_employees') }}">Add employees</a>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('creator.empdetails') }}">View employees</a>&ndash;&gt;-->
 <!--&lt;!&ndash;            &ndash;&gt;-->
 <!--&lt;!&ndash;          </div>&ndash;&gt;-->
 <!--&lt;!&ndash;        </div>&ndash;&gt;-->
@@ -213,22 +213,22 @@ layui.use('element', function(){
 <!--        </a>-->
 <!--        <div id="collapseFour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">-->
 <!--          <div class="bg-white py-2 collapse-inner rounded">-->
-<!--            <a class="collapse-item" href="{{ url_for('manager.mem_complaint_history') }}">成员反馈</a>-->
-<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('manager.emp_complaint_hist') }}">Employee's complaint</a>&ndash;&gt;-->
+<!--            <a class="collapse-item" href="{{ url_for('creator.mem_complaint_history') }}">成员反馈</a>-->
+<!--&lt;!&ndash;            <a class="collapse-item" href="{{ url_for('creator.emp_complaint_hist') }}">Employee's complaint</a>&ndash;&gt;-->
 <!--          </div>-->
 <!--        </div>-->
 <!--      </li>-->
 
 
 <!--&lt;!&ndash;      <li class="nav-item">&ndash;&gt;-->
-<!--&lt;!&ndash;        <a class="nav-link collapsed" href="{{ url_for('manager.approve_leaveapplications') }}">&ndash;&gt;-->
+<!--&lt;!&ndash;        <a class="nav-link collapsed" href="{{ url_for('creator.approve_leaveapplications') }}">&ndash;&gt;-->
 <!--&lt;!&ndash;          <span>Leave applications</span>&ndash;&gt;-->
 <!--&lt;!&ndash;        </a>&ndash;&gt;-->
 <!--&lt;!&ndash;      </li>&ndash;&gt;-->
 
 
 <!--&lt;!&ndash;      <li class="nav-item">&ndash;&gt;-->
-<!--&lt;!&ndash;        <a class="nav-link collapsed" href="{{ url_for('manager.mem_feedbacks') }}">&ndash;&gt;-->
+<!--&lt;!&ndash;        <a class="nav-link collapsed" href="{{ url_for('creator.mem_feedbacks') }}">&ndash;&gt;-->
 <!--&lt;!&ndash;          <span>View feedback</span>&ndash;&gt;-->
 <!--&lt;!&ndash;        </a>&ndash;&gt;-->
 <!--&lt;!&ndash;      </li>&ndash;&gt;-->
@@ -475,4 +475,4 @@ layui.use('element', function(){
 <!--      </div>-->
 <!--    </div>-->
 <!--  </div>-->
-<!--{% include 'manager_footer.html' %}-->
+<!--{% include 'footer.html' %}-->

@@ -94,30 +94,6 @@ def join_club(name):
 @user.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-    # form = SearchClubForm()
-    # clubs = Club.query.all()
-    # if request.method == 'POST':
-    #     club_name = request.form.get('club_name')
-    #     club_type = request.form.get('club_type')
-    #     if club_name != '':
-    #         clubs = Club.query.filter_by(club_name=club_name).all()
-    #     elif club_type != '全部':
-    #         clubs = Club.query.filter_by(club_type=club_type).all()
-    #
-    # clubs = [{'club_name': club.club_name, 'club_type': club.club_type,
-    #           'club_desp': club.club_desp, 'club_creator_id': club.creator.first().id} for club in clubs]
-    #
-    # if request.method == 'POST':
-    #     session['search_res'] = clubs
-    #     session['searched'] = True
-    #     return redirect(url_for('.search'))
-    #
-    # if not session.get('searched', False):
-    #     session['search_res'] = clubs
-    #
-    # return render_template('user_templates/search.html', name=session.get('name'), form=form,
-    #                        cclubs=session.get('cclubs'), mclubs=session.get('mclubs'),
-    #                        search_res=session['search_res'])
     form = SearchClubForm()
     if request.method == 'POST':
         return redirect(url_for('.search', club_name=form.club_name.data, club_type=form.club_type.data))

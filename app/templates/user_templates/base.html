@@ -53,7 +53,7 @@
                   <a>我创建的&nbsp<span class="layui-badge layui-bg-black">{{ cclubs|length }}</span></a>
                     <dl class="layui-nav-child">
                         {% for club in cclubs %}
-                         <dd><a  href="{{ url_for('manager.index', name=club) }}"> {{club}} </a></dd>
+                         <dd><a  href="{{ url_for('creator.index', name=club) }}"> {{club}} </a></dd>
                         {% endfor %}
                     </dl>
               </dd>
