@@ -1,4 +1,4 @@
-{% extends 'manager_index.html' %}
+{% extends 'index.html' %}
 
 {% block title %}社团活动管理{% endblock %}
 
@@ -27,7 +27,7 @@
       
             <!-- Modal body -->
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('manager.amenities') }}">
+                <form method="POST" action="{{ url_for('creator.activity_info') }}">
                     <div class="form-group row">
                         <label for="colFormLabel" class="col-sm-2 col-form-label">名称</label>
                         <div class="col-sm-10">
@@ -68,7 +68,7 @@
             </thead>
             <tbody>
                 {% for x in data %}
-                <form method="POST" action="{{ url_for('manager.amenities') }}">
+                <form method="POST" action="{{ url_for('creator.activity_info') }}">
                     <tr>
                         <td><input type="text" class="form-control"  name="Name" value="{{ x.act_name }}" /></td>
                         <td><input type="text" class="form-control" name="Description" value="{{ x.act_desp }}"/></td>

@@ -25,11 +25,11 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <a href="{{ url_for('manager.index', name=club.club_name) }}"><div class="layui-logo">松露-社团主页</div></a>
+    <a href="{{ url_for('creator.index', name=club.club_name) }}"><div class="layui-logo">松露-社团主页</div></a>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item"><a href="{{ url_for('main.index') }}">个人主页</a></li>
-      <li class="layui-nav-item"><a href="{{ url_for('main.logout') }}">退出登录</a></li>
+        <li class="layui-nav-item"><a href="{{ url_for('user.index') }}">个人主页</a></li>
+      <li class="layui-nav-item"><a href="{{ url_for('user.logout') }}">退出登录</a></li>
     </ul>
   </div>
 
@@ -38,27 +38,27 @@
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
         <li class="layui-nav-item">
-            <a href="{{ url_for('manager.personalinfo') }}">社团信息</a>
+            <a href="{{ url_for('creator.club_info') }}">社团信息</a>
         <li class="layui-nav-item">
-          <a href="{{ url_for('manager.amenities') }}">活动管理</a>
+          <a href="{{ url_for('creator.activity_info') }}">活动管理</a>
         </li>
           <li class="layui-nav-item">
           <a class="" href="javascript:;">社团成员</a>
           <dl class="layui-nav-child">
               <dd>
                     <dl class="layui-nav-item">
-                         <dd><a  href="{{ url_for('manager.add_members') }}"> 添加成员 </a></dd>
+                         <dd><a  href="{{ url_for('creator.add_members') }}"> 添加成员 </a></dd>
                     </dl>
               </dd>
               <dd>
                   <dl class="layui-nav-item">
-                      <dd><a  href="{{ url_for('manager.memberdetails') }}"> 成员概览 </a></dd>
+                      <dd><a  href="{{ url_for('creator.member_details') }}"> 成员概览 </a></dd>
                   </dl>
               </dd>
            </dl>
         </li>
         <li class="layui-nav-item">
-          <a href="{{ url_for('manager.mem_complaint_history') }}">成员反馈</a>
+          <a href="{{ url_for('creator.mem_complaint_history') }}">成员反馈</a>
         </li>
       </ul>
     </div>

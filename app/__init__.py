@@ -26,8 +26,8 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .manager import manager as manager_blueprint
-    app.register_blueprint(manager_blueprint)
+    from .creator import creator as creator_blueprint
+    app.register_blueprint(creator_blueprint)
 
     from .member import member as member_blueprint
     app.register_blueprint(member_blueprint)
