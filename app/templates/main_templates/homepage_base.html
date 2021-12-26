@@ -1,64 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <title>{{ title }} | 松露</title>
-    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href=" https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css " rel="stylesheet ">
-    <link href="{{ url_for( 'static', filename='main_static/css/style.css' ) }} " rel="stylesheet ">
-    <link href="{{ url_for( 'static', filename='main_static/css/profile.css' ) }} " rel="stylesheet ">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300" rel="stylesheet">
-    <link rel="shortcut icon " href="{{ url_for( 'static', filename='main_static/img/windmill.png' ) }} ">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="../../static/layui/css/layui.css"    media="all">
+  <link rel="stylesheet" href="../../static/main_static/css/homepage.css">
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+  <style>
+    /* 移动端 */
+    @media screen and (max-width: 768px) {
+      .layui-layout-admin .layui-layout-left,
+      .layui-layout-admin .layui-body,
+      .layui-layout-admin .layui-footer{left: 0;}
+      .layui-layout-admin .layui-side{left: -300px;}
+    }
+
+    .alert{position:relative;padding:.75rem 1.25rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
+    .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
+    .alert-warning{color:#856404;background-color:#fff3cd;border-color:#ffeeba}
+    .close{float:right;font-size:1.5rem;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.5}
+    .close:focus,.close:hover{color:#000;text-decoration:none;opacity:.75}
+    .close:not(:disabled):not(.disabled){cursor:pointer}
+    button.close{padding:0;background-color:transparent;border:0;-webkit-appearance:none}
+    .close{padding:1rem;margin:-1rem -1rem -1rem auto}
+    .alert-dismissible .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
+  </style>
 </head>
-
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top topnav " role="navigation ">
-        <div class="container topnav ">
-            <div class="navbar-header ">
-                <button type="button " class="navbar-toggle " data-toggle="collapse " data-target="#bs-example-navbar-collapse-1 ">
-                  <span class="sr-only ">Toggle navigation</span>
-                  <span class="icon-bar "></span>
-                  <span class="icon-bar "></span>
-                  <span class="icon-bar "></span>
-              </button>
-                <a class="navbar-brand topnav homelogo" href="{{ url_for( 'main.home') }} ">松露</a>
-            </div>
-            <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1 ">
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %} {% if current_user.is_admin %}
-                    <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('admin.list_departments') }}">Departments</a></li>
-                    <li><a href="{{ url_for('admin.list_grades') }}">Grades</a></li>
-                    <li><a href="{{ url_for('admin.list_roles') }}">Roles</a></li>
-                    <li><a href="{{ url_for('admin.list_employees') }}">Employees</a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('home.profile') }}">Profile</a></li>
-                    {% endif %}
-                    <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
-                    <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('main.home') }}">主页</a></li>
-                    <li><a href="{{ url_for('main.register') }}">注册</a></li>
-                    <li><a href="{{ url_for('main.login') }}">登录</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="wrapper ">
-        {% block body %} {% endblock %}
-        <div class="push "></div>
+  <div class="layui-header layui-bg-black">
+    <div class="layui-container">
+      <div class="layui-logo layui-hide-xs" id="logo">松露-社团管理系统</div>
+      <!-- 头部区域（可配合layui 已有的水平导航） -->
+      <ul class="layui-nav layui-layout-right">
+        <!-- 移动端显示 -->
+        <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+          <i class="layui-icon layui-icon-spread-left"></i>
+        </li>
+        <li class="layui-nav-item layui-hide-xs"><a href={{ url_for('main.home') }}>首页</a></li>
+        <li class="layui-nav-item layui-hide-xs" style="margin-left: 50px;"><a href={{ url_for('main.all_clubs') }}>查看社团</a></li>
+        <li class="layui-nav-item layui-hide-xs" style="margin-left: 50px;"><a href={{ url_for('main.about_us') }}>关于我们</a></li>
+      </ul>
     </div>
-    <footer>
-        <div class="container ">
-            <div class="row ">
-                <div class="col-lg-12">
-                    <p class="copyright text-muted small text-center"> 松露 <i class="fa fa-heart pulse bluecolor"></i> 2021-2022</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-</body>
+  </div>
 
+  {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+<!--        <button type="button" class="close" data-dismiss="alert">&times;</button>-->
+        <button class="layui-btn layui-btn-xs layui-btn-primary" onclick="this.parentElement.remove()">关闭</button>
+        &nbsp
+        {{ message }}
+    </div>
+  {% endfor %}
+
+{% block body %} {% endblock %}
+
+
+<div class="layui-container">
+  <div class="layui-row">
+        <div class="layui-footer" style="text-align: center;">
+          Copyright 2021-2022 Construct&nbsp;&nbsp;|&nbsp;&nbsp;版权所有：涂宏伟组
+        </div>
+  </div>
+</div>
+
+
+<script src="../../static/layui/layui.js"   charset="utf-8"></script>
+<script>
+//JS
+layui.use(['element', 'layer', 'util'], function(){
+  var element = layui.element
+  ,layer = layui.layer
+  ,util = layui.util
+  ,$ = layui.$;
+});
+</script>
+{% block script %}{% endblock %}
+</body>
 </html>

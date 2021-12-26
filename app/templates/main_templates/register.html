@@ -2,22 +2,54 @@
 {% block title %}欢迎使用社团管理系统{% endblock %}
 
 {% block body %}
-<div class="login-main">
-    <header class="layui-elip">注册</header>
-    <form class="layui-form" method="post">
-        {{ form.csrf_token }}
-        <div class="layui-input-inline">
-            {{ form.account(class="layui-input",placeholder="学号") }}
-        </div>
-        <div class="layui-input-inline">
-            {{ form.password(class="layui-input",placeholder="密码") }}
-        </div>
-        <div class="layui-input-inline login-btn">
-            {{ form.submit(class="layui-btn") }}
-        </div>
-        <hr/>
-        <p><a href="javascript:;" class="fr">忘记密码请与系统管理员联系</a></p>
-    </form>
+<!--<div class="login-main">-->
+<!--    <header class="layui-elip">注册</header>-->
+<!--    <form class="layui-form" method="post">-->
+<!--        {{ form.csrf_token }}-->
+<!--        <div class="layui-input-inline">-->
+<!--            {{ form.account(class="layui-input",placeholder="学号") }}-->
+<!--        </div>-->
+<!--        <div class="layui-input-inline">-->
+<!--            {{ form.password(class="layui-input",placeholder="密码") }}-->
+<!--        </div>-->
+<!--        <div class="layui-input-inline login-btn">-->
+<!--            {{ form.submit(class="layui-btn") }}-->
+<!--        </div>-->
+<!--        <hr/>-->
+<!--        <p><a href="javascript:;" class="fr">忘记密码请与系统管理员联系</a></p>-->
+<!--    </form>-->
+<!--</div>-->
+<div style="text-align: center;">
+    <div class="layui-inline">
+        <header class="layui-elip" style="margin-top: 50px; margin-bottom: 20px; height: 35px; line-height: 35px; font-size: 30px; font-weight: 100;">注册</header>
+        <form class="layui-form" method="post">
+            {{ form.csrf_token }}
 
+            <div style="font-size: 15px; font-weight: 100">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 300px;">
+                        {{ form.account(class="layui-input", placeholder="学号") }}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 300px;">
+                        {{ form.password(class="layui-input", placeholder="密码") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline login-btn" style="width: 300px;">
+                    {{ form.submit(class="layui-btn layui-btn-fluid") }}
+                </div>
+            </div>
+
+            <div style="width: 300px;">
+                <hr/>
+                <p><a href="javascript:;" class="fr">忘记密码请与系统管理员联系</a></p>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

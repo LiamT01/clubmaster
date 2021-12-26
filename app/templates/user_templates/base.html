@@ -38,7 +38,7 @@
           <dd><a href="{{ url_for('user.change_password') }}">修改密码</a></dd>
         </dl>
       </li>
-      <li class="layui-nav-item"><a href="{{ url_for('user.logout') }}">退出登录</a></li>
+      <li class="layui-nav-item" style="margin-left: 50px;"><a href="{{ url_for('user.logout') }}">退出登录</a></li>
     </ul>
   </div>
 
@@ -50,7 +50,7 @@
           <a class="" href="javascript:;">社团管理</a>
           <dl class="layui-nav-child">
               <dd>
-                  <a>我创建的</a>
+                  <a>我创建的&nbsp<span class="layui-badge layui-bg-black">{{ cclubs|length }}</span></a>
                     <dl class="layui-nav-child">
                         {% for club in cclubs %}
                          <dd><a  href="{{ url_for('manager.index', name=club) }}"> {{club}} </a></dd>
@@ -58,7 +58,7 @@
                     </dl>
               </dd>
               <dd>
-                  <a>我加入的</a>
+                  <a>我加入的&nbsp<span class="layui-badge layui-bg-black">{{ mclubs|length }}</span></a>
                   <dl class="layui-nav-child">
                       {% for club in mclubs %}
                       <dd><a  href="{{ url_for('member.index', name=club) }}"> {{club}} </a></dd>
@@ -82,12 +82,21 @@
   <div class="layui-body">
     <!-- 内容主体区域 -->
     <div class="layui-card layui-row layui-col-space10" style="margin:15px 10px;width:100%;">
+<!--        {% for message in get_flashed_messages() %}-->
+<!--        <div class="alert alert-warning">-->
+<!--            <button type="button" class="close" data-dismiss="alert">&times;</button>-->
+<!--                {{ message }}-->
+<!--        </div>-->
+<!--        {% endfor %}-->
         {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <div class="alert alert-warning">
+            <!--        <button type="button" class="close" data-dismiss="alert">&times;</button>-->
+                <button class="layui-btn layui-btn-xs layui-btn-primary" onclick="this.parentElement.remove()">关闭</button>
+                &nbsp
                 {{ message }}
-        </div>
+            </div>
         {% endfor %}
+
         {% block card %}{% endblock %}
         <div class="layui-card-body">
         {% block body %}

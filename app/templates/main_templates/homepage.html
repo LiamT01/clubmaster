@@ -1,26 +1,129 @@
-{% extends "main_templates/homepage_base.html" %} {% block title %}Home{% endblock %} {% block body %}
-<!--<br/>-->
-<!--<p id="message">-->
-<!--    让社团管理成为享受。-->
-<!--</p>-->
-<div class="intro-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="intro-message">
-                    <h1>松露</h1>
-                    <h3>让管理社团成为享受</h3>
-                    </ul>
-                    <br>
-                    <br>
-                    <a href="{{ url_for('main.register') }}" id="out">新用户？快加入吧！</a>
-                    <br>
-                    <br>
-                    <br>
-                    <a href="{{ url_for('main.login') }}" id="in">用户登录</a>
-                </div>
+{% extends "homepage_base.html" %}
+{% block title %} 松露-社团管理系统 {% endblock %}
+{% block body %}
+  <div class="layui-container">
+    <div class="layui-row">
+      <div class="layui-col-md7">
+        <img src="../../static/main_static/img/intro-bg.png" id="banner-img">
+      </div>
+      <div class="layui-col-md5">
+        <div class="layui-tab layui-tab-brief" id="home-card">
+              <ul class="layui-tab-title">
+              <li class="layui-this">登录</li>
+              <li>注册</li>
+            </ul>
+              <div class="layui-tab-content">
+              <div class="layui-tab-item layui-show">
+                  <div style="text-align: center;">
+                  <div class="layui-inline">
+                  <header class="layui-elip" style="margin-top: 50px; margin-bottom: 20px; height: 35px; line-height: 35px; font-size: 30px; font-weight: 100;">登录</header>
+                  <form action="{{ url_for('main.login') }}" class="layui-form" method="post" autocomplete="off">
+                  {{ login_form.csrf_token(id='csrf_login') }}
+
+                  <div style="font-size: 15px; font-weight: 100">
+                  <div class="layui-form-item">
+                  <div class="layui-input-inline" style="width: 300px;">
+                  {{ login_form.account_login(class="layui-input", placeholder="学号") }}
+                  </div>
+                  </div>
+
+
+                  <div class="layui-form-item">
+                  <div class="layui-input-inline" style="width: 300px;">
+                  {{ login_form.password_login(class="layui-input", placeholder="密码") }}
+                  </div>
+                  </div>
+                  </div>
+
+                  <div class="layui-form-item">
+                  <div class="layui-input-inline login-btn" style="width: 300px;">
+                  {{ login_form.submit_login(class="layui-btn layui-btn-fluid") }}
+                  </div>
+                  </div>
+
+                  <div style="width: 300px;">
+                  <hr/>
+                  <p><a href="javascript:;" class="fr">忘记密码请与系统管理员联系</a></p>
+                  </div>
+                  </form>
+                  </div>
+                  </div>
+                  </div>
+
+
+                <div class="layui-tab-item">
+                    <div style="text-align: center;">
+                    <div class="layui-inline">
+                    <header class="layui-elip" style="margin-top: 50px; margin-bottom: 20px; height: 35px; line-height: 35px; font-size: 30px; font-weight: 100;">注册</header>
+                    <form action="{{ url_for('main.register') }}" class="layui-form" method="post" autocomplete="off">
+                    {{ register_form.csrf_token(id='csrf_register') }}
+
+                    <div style="font-size: 15px; font-weight: 100">
+                    <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 300px;">
+                    {{ register_form.account_reg(class="layui-input", placeholder="学号") }}
+                    </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 300px;">
+                    {{ register_form.stu_name_reg(class="layui-input", placeholder="姓名") }}
+                    </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 300px;">
+                    {{ register_form.password_reg(class="layui-input", placeholder="密码") }}
+                    </div>
+                    </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                    <div class="layui-input-inline login-btn" style="width: 300px;">
+                    {{ register_form.submit_reg(class="layui-btn layui-btn-fluid") }}
+                    </div>
+                    </div>
+
+                    <div style="width: 300px;">
+                    <hr/>
+                    <p><a href="javascript:;" class="fr">忘记密码请与系统管理员联系</a></p>
+                    </div>
+                    </form>
+                    </div>
+                    </div>
+              </div>
             </div>
-        </div>
+            </div>
+      </div>
     </div>
-</div>
+<!--      <div class="layui-row layui-col-space30">-->
+<!--          <div class="layui-col-md4">-->
+<!--              <div class="layui-panel">-->
+<!--                <div style="padding: 30px;">-->
+<!--                    <p style="text-align: center; font-size: 15px;">面板1</p>-->
+<!--                    <hr>-->
+<!--                    <p>内容1</p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--          </div>-->
+<!--          <div class="layui-col-md4">-->
+<!--              <div class="layui-panel">-->
+<!--                <div style="padding: 30px;">-->
+<!--                    <p style="text-align: center; font-size: 15px;">面板1</p>-->
+<!--                    <hr>-->
+<!--                    <p>内容1</p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              </div>-->
+<!--          <div class="layui-col-md4">-->
+<!--              <div class="layui-panel">-->
+<!--                <div style="padding: 30px;">-->
+<!--                    <p style="text-align: center; font-size: 15px;">面板1</p>-->
+<!--                    <hr>-->
+<!--                    <p>内容1</p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              </div>-->
+<!--          </div>-->
+  </div>
 {% endblock %}

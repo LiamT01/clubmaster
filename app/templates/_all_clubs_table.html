@@ -1,0 +1,44 @@
+<br/>
+<div style="text-align: center">
+    <form class="layui-form" method="post" id="searchForm">
+    {{ form.csrf_token }}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label style="font-size: medium;width: 150px;" class="layui-form-label">社团名称：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_name(class="layui-input", id="club_name") }}
+                </div>
+                <label style="font-size: medium;width: 80px;" class="layui-form-label">社团类型：</label>
+                <div class="layui-input-inline">
+                    {{ form.club_type(class="layui-input", id="club_type") }}
+                </div>
+                <div class="layui-input-inline">{{ form.submit(class="layui-btn", id="search") }}</div>
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <div class="layui-inline">
+        <table lay-even id="result" lay-filter="re" lay-data="{align:'center'}">
+        <thead>
+            <tr>
+              <th lay-data="{field:'club_name', width:160, align:'center'}">社团名称</th>
+              <th lay-data="{field:'club_type', width:180, align:'center'}">社团类型</th>
+              <th lay-data="{field:'club_creator', width:160, align:'center'}">创建者</th>
+              <th lay-data="{field:'club_desp', width:240, align:'center'}">社团描述</th>
+            </tr>
+        </thead>
+          <tbody>
+            {% for club in search_res %}
+              <tr>
+                <td>{{club.club_name}}</td>
+                <td>{{club.club_type}}</td>
+                <td>{{club.creator.first().as_user.stu_name}}</td>
+                <td>{{club.club_desp}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+    </div>
+</div>

@@ -9,13 +9,13 @@ from ..models import User, Club, Member, Creator, Activity, Admin
 @user.route('/index')
 @login_required
 def index():
-    user = User.query.filter_by(stu_id=session.get('stu_id')).first()
-    c = user.as_creator.created_clubs
-    m = user.as_member.joined_clubs
+    # user = User.query.filter_by(stu_id=current_user.stu_id).first()
+    c = current_user.as_creator.created_clubs
+    m = current_user.as_member.joined_clubs
     session['cclubs'] = [x.club_name for x in c]
     session['mclubs'] = [x.club_name for x in m]
 
-    return render_template('user_templates/index.html', name=session.get('name'),
+    return render_template('user_templates/index.html',
                            cclubs=session.get('cclubs'),
                            mclubs=session.get('mclubs'))
 
@@ -24,14 +24,14 @@ def index():
 def logout():
     logout_user()
     flash('您已经登出！')
-    return redirect(url_for('main.login'))
+    return redirect(url_for('main.home'))
 
 
-@user.route('/user/<id>')
+@user.route('/<id>')
 @login_required
 def user_info(id):
     user = User.query.filter_by(stu_id=id).first()
-    return render_template('user_templates/user_info.html', user=user, name=session.get('name'),
+    return render_template('user_templates/user_info.html', user=user, name=current_user.stu_name,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))
 
 
@@ -53,7 +53,7 @@ def change_password():
     return render_template("user_templates/change_password.html", form=form)
 
 
-@user.route('/create_a_club', methods=['GET', 'POST'])
+@user.route('/create_club', methods=['GET', 'POST'])
 @login_required
 def create_club():
     form = NewStoreForm()
@@ -74,7 +74,7 @@ def create_club():
             creator = User.query.get(current_user.stu_id).as_creator
             # session['cclubs'] = [x.club_name for x in Club.query.filter(Club.creator.id == session.get('stu_id')).all()]
             session['cclubs'] = [club.club_name for club in creator.created_clubs.all()]
-    return render_template('user_templates/create_club.html', name=session.get('name'), form=form,
+    return render_template('user_templates/create_club.html', name=current_user.stu_name, form=form,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))
 
 @user.route('/<name>/join_club')
@@ -132,5 +132,5 @@ def change_info():
         return redirect(url_for('.user_info', id=current_user.stu_id))
     form.name.data = current_user.stu_name
     id = current_user.stu_id
-    return render_template('user_templates/change_info.html', form=form, id=id, name=session['name'],
+    return render_template('user_templates/change_info.html', form=form, id=id, name=current_user.stu_name,
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))

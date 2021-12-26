@@ -1,0 +1,20 @@
+#logo {
+    padding-top: 15px;
+    font-size: 20px;
+}
+
+#banner-img {
+    width: 1000px;
+    overflow: hidden;
+    /*background-image: url("../../main_static/img/intro-bg.png");*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 80%;*/
+    /*position: absolute;*/
+}
+
+#home-card {
+    /*position: relative;*/
+    /*float: right;*/
+    margin-top: 40px;
+    width: 400px;
+}
