@@ -1,4 +1,4 @@
-{% extends "homepage_base.html" %}
+{% extends "main_templates/homepage_base.html" %}
 {% block title %} 松露-社团管理系统 {% endblock %}
 {% block body %}
   <div class="layui-container">
@@ -14,7 +14,7 @@
             </ul>
               <div class="layui-tab-content">
               <div class="layui-tab-item layui-show">
-                  <div style="text-align: center;">
+                  <div style="text-align: center; height:350px;">
                   <div class="layui-inline">
                   <header class="layui-elip" style="margin-top: 50px; margin-bottom: 20px; height: 35px; line-height: 35px; font-size: 30px; font-weight: 100;">登录</header>
                   <form action="{{ url_for('main.login') }}" class="layui-form" method="post" autocomplete="off">

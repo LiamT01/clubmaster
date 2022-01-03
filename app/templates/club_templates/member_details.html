@@ -1,0 +1,235 @@
+{% extends "club_templates/base.html" %}
+
+{% block card %}
+    <div class="layui-card-header">
+        <h2>成员概览</h2>
+    </div>
+{% endblock %}
+
+{% block body %}
+<!--<div class="container-fluid">-->
+<!--    &lt;!&ndash; Page Heading &ndash;&gt;-->
+<!--    <div class="d-sm-flex align-items-center justify-content-between mb-4">-->
+<!--      <h1 class="h3 mb-0 text-gray-800">成员概览 </h1>-->
+<!--      &lt;!&ndash; <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> &ndash;&gt;-->
+<!--    </div>-->
+<!--&lt;!&ndash; {{ MemDetail }} &ndash;&gt;-->
+
+<!--<div class="row">-->
+<!--    <div class="col-12">-->
+<!--      <div class="card">-->
+<!--        <div class="card-body">-->
+<!--          <div class="row mb-2">-->
+<!--            <div class="col-sm-12 col-md-12 ">-->
+<!--            <div class="dropdown">-->
+<!--              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">选择 &nbsp</button>-->
+<!--              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                <a class="dropdown-item" href="#">所有社员</a>-->
+<!--                <a class="dropdown-item" href="#">积极的社员</a>-->
+<!--                <a class="dropdown-item" href="#">不积极的社员</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--                &nbsp-->
+<!--            </div>-->
+
+<!--                <div class="col-12 table-responsive" >-->
+
+<!--                   <table class="col-12 table table-striped" >-->
+<!--                     <thead class="thead-dark">-->
+<!--                       <tr>-->
+<!--                         <th scope="col" width="10%">姓名</th>-->
+<!--                         <th scope="col">邮箱</th>-->
+<!--                         <th scope="col">手机号</th>-->
+<!--                         <th scope="col">性别</th>-->
+<!--                         <th scope="col" width="10%">生日</th>-->
+<!--&lt;!&ndash;                         <th scope="col">Address</th>&ndash;&gt;-->
+<!--                         -->
+<!--                         <th scope="col">成员编号</th>-->
+<!--                         <th scope="col">成员简介</th>-->
+<!--                         <th scope="col">入社时间</th>-->
+<!--                         <th scope="col">更新</th>-->
+<!--                       </tr>-->
+<!--                     </thead>-->
+
+<!--                       <tbody>-->
+<!--                       {% for x in MemDetail %}-->
+<!--                         <tr>-->
+<!--                          <td>{{ x['fullname'] }}</td>-->
+<!--                          <td>{{ x['email'] }}</td>-->
+<!--                          <td>{{ x['contact_no'] }}</td>-->
+<!--                          <td>{{ x['gender'] }}</td>-->
+<!--                          <td>{{ x['dob'] }}</td>-->
+<!--                          <td>{{ x['address'] }}</td>-->
+<!--                          -->
+<!--                          <td>{{ x['memid'] }}</td>-->
+<!--                          <td>{{ x['description'] }}</td>-->
+<!--                          <td>{{ x['duration'] }}</td>-->
+<!--                          <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{x['fullname']|replace(' ','')  }}"> <i class="fa fa-eye" aria-hidden="true"></i>&nbsp View</button></td>-->
+<!--                         </tr>-->
+<!--                        &lt;!&ndash; Modal &ndash;&gt;-->
+<!--                            <div class="modal fade" id="{{x['fullname']|replace(' ','') }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">-->
+<!--                              <div class="modal-dialog modal-lg">-->
+<!--                                <div class="modal-content">-->
+<!--                                  <div class="modal-header">-->
+<!--                                    <h5 class="modal-title" id="staticBackdropLabel">Update Details</h5>-->
+<!--                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                                      <span aria-hidden="true">&times;</span>-->
+<!--                                    </button>-->
+<!--                                  </div>-->
+<!--                                  <div class="modal-body">-->
+<!--                                    <div class="container-fluid">-->
+<!--                                      <h5></h5>-->
+<!--                                      <form>-->
+<!--                                              <div class="form-row">-->
+<!--                                                <div class="form-group col-md-4">-->
+<!--                                                  <label for="inputEmail4">First Name</label>-->
+<!--                                                  <input type="text"  name="firstname" value="{{ x['first_name'] }}" class="form-control" id="inputEmail4">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-4">-->
+<!--                                                  <label for="inputPassword4">Middle Name</label>-->
+<!--                                                  <input type="text" name="middlename" value="{{ x['middle_name'] }}" class="form-control" id="inputPassword4">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-4">-->
+<!--                                                  <label for="inputPassword4">Last Name</label>-->
+<!--                                                  <input type="text" name="lastname" value="{{ x['last_name'] }}" class="form-control" id="inputPassword4">-->
+<!--                                                </div>-->
+<!--                                              </div>-->
+<!--                                              <div class="form-row">-->
+<!--                                                <div class="form-group col-md-6">-->
+<!--                                                  <label for="inputEmail4">Email</label>-->
+<!--                                                  <input type="email" name="email" value="{{ x['email'] }}" class="form-control" id="inputEmail4">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-6">-->
+<!--                                                  <label for="inputPassword4">Contact No</label>-->
+<!--                                                  <input type="text" name="cno" value="{{ x['contact_no'] }}" class="form-control" id="inputPassword4">-->
+<!--                                                </div>-->
+<!--                                              </div>-->
+<!--                                              <div class="form-row">-->
+<!--                                                <div class="form-group col-md-6">-->
+<!--                                                  <label for="inputEmail4">Gender</label>-->
+<!--                                                  <input type="email" name="gender" value="{{ x['gender'] }}" class="form-control" id="inputEmail4">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-6">-->
+<!--                                                  <label for="inputPassword4">DOB</label>-->
+<!--                                                  <input type="date" name="dob" value="{{ x['dob'] }}" class="form-control" id="inputPassword4">-->
+<!--                                                </div>-->
+<!--                                              </div>-->
+<!--                                              <div class="form-group">-->
+<!--                                                <label for="inputAddress">Address</label>-->
+<!--                                                <input type="text" name="address" value="{{ x['address_line_1'] }}" class="form-control" id="inputAddress" >-->
+<!--                                              </div>-->
+<!--                                              <div class="form-group">-->
+<!--                                                <label for="inputAddress2">Address 2</label>-->
+<!--                                                <input type="text" name="address2" value="{{ x['address_line_2'] }}" class="form-control" id="inputAddress2">-->
+<!--                                              </div>-->
+<!--                                              <div class="form-row">-->
+<!--                                                <div class="form-group col-md-3">-->
+<!--                                                  <label for="inputCity">Area</label>-->
+<!--                                                  <input type="text" name="area" value="{{ x['address_area'] }}" class="form-control" id="inputCity">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-3">-->
+<!--                                                  <label for="inputCity">City</label>-->
+<!--                                                  <input type="text" name="city" value="{{ x['city'] }}" class="form-control" id="inputCity">-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-4">-->
+<!--                                                  <label for="inputState">State</label>-->
+<!--                                                  <select id="inputState" name="state"  class="form-control">-->
+<!--                                                    &lt;!&ndash; <option selected>Choose...</option> &ndash;&gt;-->
+<!--                                                    <option value="{{ x['state'] }}">{{ x['state'] }}</option>-->
+<!--                                                  </select>-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-md-2">-->
+<!--                                                  <label for="inputZip">Pincode</label>-->
+<!--                                                  <input type="text" name="pincode" value="{{ x['pincode'] }}" class="form-control" id="inputZip">-->
+<!--                                                </div>-->
+<!--                                              </div>-->
+<!--                                       </div>-->
+<!--                                  </div>-->
+<!--                                  <div class="modal-footer">-->
+<!--                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                                    <button type="submit" class="btn btn-success">Submit</button>-->
+<!--                                          </form>-->
+<!--                                  </div>-->
+<!--                                </div>-->
+<!--                              </div>-->
+<!--                            </div>-->
+<!--                       {% endfor %}-->
+<!--                       </tbody>-->
+
+<!--                   </table>-->
+<!--                </div>-->
+
+<!--              <div class="col-md  ">-->
+<!--                  <nav aria-label="Page navigation example">-->
+<!--                    <ul class="pagination">-->
+<!--                      <li class="page-item"><a class="page-link" href="#">上一页</a></li>-->
+<!--                      <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--                      <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--                      <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--                      <li class="page-item"><a class="page-link" href="#">下一页</a></li>-->
+<!--                    </ul>-->
+<!--                  </nav>-->
+<!--              </div>-->
+
+<!--          </div>-->
+<!--        </div> &lt;!&ndash; end card-body&ndash;&gt;-->
+<!--      </div> &lt;!&ndash; end card&ndash;&gt;-->
+<!--    </div> &lt;!&ndash; end col &ndash;&gt;-->
+<!--</div> &lt;!&ndash; end row &ndash;&gt;-->
+
+<!--</div> &lt;!&ndash; end container fluid &ndash;&gt;-->
+    <div style="width: 500px; text-align: center;">
+        <div class="layui-inline">
+            <table lay-even id="result" lay-filter="re">
+              <thead>
+                <tr>
+                    <th lay-data="{field:'member_id', width:160, align:'center'}">成员学号</th>
+                    <th lay-data="{field:'member_name', width:180, align:'center'}">成员姓名</th>
+                    {% if session['role'] == 'creator' %}
+                    <th lay-data="{field:'member_operation', width:180, align:'center'}">操作</th>
+                    {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                 <tr>
+                    <td>{{ club.creator.id }}</td>
+                    <td>{{ club.creator.name + "（社长）" }}</td>
+                    <td>无</td>
+                  </tr>
+                {% for member in search_res %}
+                  <tr>
+                    <td>{{ member.id }}</td>
+                    <td>{{ member.name }}</td>
+                    {% if session['role'] == 'creator' %}
+                    <td>
+                        <input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('club.remove_member', id=member.id) }}';" value="删除"/>
+                    </td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+    layui.use(['form','table','jquery'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.$;
+
+        table.init('re', {
+              height: 390
+              ,limit: 7
+              ,page: true
+        });
+    });
+    </script>
+    <script type="text/html" id="barDemo">
+      <a class="layui-btn layui-btn-sm" lay-event="borr">加入</a>
+    </script>
+{% endblock %}

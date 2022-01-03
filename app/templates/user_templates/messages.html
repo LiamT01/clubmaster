@@ -1,0 +1,42 @@
+{% extends "user_templates/base.html" %}
+
+{% block title %}消息中心{% endblock %}
+{% block card %}<div class="layui-card-header"><h2>消息中心</h2></div>{% endblock %}
+
+{% block body %}
+    <div id="show_messages" style="width: 500px;">
+        {% for message in current_user.received_messages.order_by()|selectattr('state', 'equalto', 'waiting') %}
+            <div class="layui-panel" style="margin: 15px;">
+                {% if message.type == 'club_request' %}
+                    <div>
+                        <div class="layui-row" style="padding: 15px;">
+                            用户（{{ message.sender_id }}, {{ message.sender.name }}）申请加入您的社团（{{ message.club_name }}）。
+                        </div>
+                        <div class="layui-row" style="padding: 15px;">
+                            <div class="layui-col-md6" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='accept') }}';">
+                            </div>
+                            <div class="layui-col-md6" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='reject') }}';">
+                            </div>
+                        </div>
+                    </div>
+                {% elif message.type == 'club_invitation' %}
+                    <div>
+                        <div class="layui-row" style="padding: 15px;">
+                            用户（{{ message.sender_id }}, {{ message.sender.name }}）邀请您加入TA的社团（{{ message.club_name }}）。
+                        </div>
+                        <div class="layui-row" style="padding: 15px;">
+                            <div class="layui-col-md6" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='accept') }}';">
+                            </div>
+                            <div class="layui-col-md6" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='reject') }}';">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

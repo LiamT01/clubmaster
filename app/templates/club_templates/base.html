@@ -25,8 +25,12 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <a href="{{ url_for('user.index') }}"><div class="layui-logo">松露-个人主页</div></a>
+    <a href="{{ url_for('club.index', name=club.name) }}"><div class="layui-logo">松露-社团主页</div></a>
     <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+        <li class="layui-nav-item"><a href="{{ url_for('user.index') }}">回到个人主页</a></li>
+<!--      <li class="layui-nav-item" style="margin-left: 50px;"><a href="{{ url_for('user.logout') }}">退出登录</a></li>-->
+    </ul>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
@@ -34,58 +38,56 @@
           {{ current_user.name }}
         </a>
         <dl class="layui-nav-child">
-          <dd><a href="{{ url_for('user.user_info') }}">个人信息</a></dd>
+          <dd><a href="{{ url_for('user.user_info', id=current_user.id) }}">个人信息</a></dd>
           <dd><a href="{{ url_for('user.change_password') }}">修改密码</a></dd>
             <dd><a href="{{ url_for('user.logout') }}">退出登录</a></dd>
         </dl>
       </li>
-
-<!--      <li class="layui-nav-item" style="margin-left: 50px;"><a href="{{ url_for('user.logout') }}">退出登录</a></li>-->
-
 <!--        <li class="layui-nav-item" style="margin-left: 50px; width: 125px;" lay-header-event="menuRight" lay-unselect>-->
-<!--            <a href="javascript:;">消息中心&nbsp<span class="layui-badge layui-bg-black">{{ current_user.received_messages.all()|selectattr("state", "equalto", "waiting")|list|length }}</span></a>-->
+<!--            <a href="javascript:;">消息中心&nbsp<span class="layui-badge layui-bg-black">0</span></a>-->
 <!--        </li>-->
     </ul>
+
+<!--      <li class="layui-nav-item" style="margin-left: 50px;"><a href="{{ url_for('user.logout') }}">退出登录</a></li>-->
   </div>
 
   <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-      <ul class="layui-nav layui-nav-tree lay"  lay-filter="test">
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
         <li class="layui-nav-item">
-            <a href="{{ url_for('user.messages') }}">消息中心<span class="layui-badge layui-bg-green">{{ current_user.received_messages.all()|selectattr("state", "equalto", "waiting")|list|length }}</span>
-</a>
+            <a href="{{ url_for('club.club_info') }}">社团信息</a>
+        <li class="layui-nav-item">
+          <a href="{{ url_for('club.activity_info') }}">社团活动</a>
         </li>
-        <li class="layui-nav-item">
-          <a class="" href="javascript:;">社团管理</a>
+          {% if session['role'] == 'creator' %}
+          <li class="layui-nav-item">
+          <a class="" href="javascript:;">社团成员</a>
           <dl class="layui-nav-child">
+
               <dd>
-                  <a href="javascript:;">我创建的&nbsp<span class="layui-badge layui-bg-black">{{ session['cclubs']|length }}</span></a>
-                    <dl class="layui-nav-child">
-                        {% for club in session['cclubs'] %}
-                         <dd><a  href="{{ url_for('club.index', name=club) }}"> {{club}} </a></dd>
-                        {% endfor %}
+                    <dl class="layui-nav-item">
+                         <dd><a  href="{{ url_for('club.add_members') }}"> 添加成员 </a></dd>
                     </dl>
               </dd>
               <dd>
-                  <a href="javascript:;">我加入的&nbsp<span class="layui-badge layui-bg-black">{{ session['mclubs']|length }}</span></a>
-                  <dl class="layui-nav-child">
-                      {% for club in session['mclubs'] %}
-                      <dd><a  href="{{ url_for('club.index', name=club) }}"> {{club}} </a></dd>
-                      {% endfor %}
+                  <dl class="layui-nav-item">
+                      <dd><a  href="{{ url_for('club.member_details') }}"> 成员概览 </a></dd>
                   </dl>
               </dd>
            </dl>
         </li>
+          {% endif %}
+          {% if session['role'] == 'member' %}
+          <li class="layui-nav-item">
+          <a href="{{ url_for('club.member_details') }}">成员概览</a>
+            </li>
+          {% endif %}
+        {% if session['role'] == 'creator' %}
         <li class="layui-nav-item">
-            <a href="{{ url_for('user.change_info') }}">个人信息设置</a>
+          <a href="{{ url_for('club.mem_complaint_history') }}">成员反馈</a>
         </li>
-        <li class="layui-nav-item">
-          <a href="{{ url_for('user.create_club') }}">新建社团</a>
-        </li>
-        <li class="layui-nav-item">
-          <a href="{{ url_for('user.search') }}">社团查询</a>
-        </li>
+        {% endif %}}
       </ul>
     </div>
   </div>
@@ -99,6 +101,7 @@
 <!--                {{ message }}-->
 <!--        </div>-->
 <!--        {% endfor %}-->
+
         {% for message in get_flashed_messages() %}
             <div class="alert alert-warning">
             <!--        <button type="button" class="close" data-dismiss="alert">&times;</button>-->
@@ -121,7 +124,6 @@
   </div>
 </div>
 <script src="../static/layui/layui.js"></script>
-
 <script>
 //JS
 layui.use(['element', 'layer', 'util'], function(){
@@ -140,7 +142,7 @@ layui.use(['element', 'layer', 'util'], function(){
       layer.open({
         type: 1
         ,title: '查看消息'
-        ,content: document.getElementById('show_messages').innerHTML
+        ,content: ""
         ,area: ['400px', '100%']
         ,offset: 'rt' //右上角
         ,anim: 5
@@ -149,15 +151,13 @@ layui.use(['element', 'layer', 'util'], function(){
       });
     }
   });
-});
 
-function accept_club_invitation(ptr) {
-    ptr.parentNode.parentNode.parentNode.remove();
-    location.href = "{{ url_for('user.handle_club_invitation') }}";
-}
+});
 </script>
 
 {% block script %}
+
 {% endblock %}
+
 </body>
 </html>

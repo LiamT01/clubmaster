@@ -1,0 +1,65 @@
+{% extends "club_templates/base.html" %}
+
+{% block title %}社团信息设置{% endblock %}
+
+{% block card %}
+    <div class="layui-card-header">
+        <h2>社团信息</h2>
+    </div>
+{% endblock %}
+
+{% block body %}
+      <div style="text-align: left">
+          <div class="layui-inline">
+              <form class="layui-form" method="post" action="{{ url_for('club.change_club_info') }}">
+                  {{ form.csrf_token }}
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="font-size: medium">社团名称：</label>
+                    <div class="layui-input-block">{{ form.club_name(class="layui-input", readonly='readonly') }}</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="font-size: medium">社团类型：</label>
+                    <div class="layui-input-block">
+                        {{ form.club_type(class="layui-input") }}
+                    </div>
+                </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label" style="font-size: medium">社团描述：</label>
+                      <div class="layui-input-block">
+                         {{ form.club_desp(class="layui-input") }}
+                    </div>
+                    </div>
+                  {% if session['role'] == 'creator' %}
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            {{ form.submit(class="layui-btn") }}
+                            <input type="button" class="layui-btn" value="删除该社团" onclick="">
+                        </div>
+                    </div>
+                  <div class="layui-form-item">
+                        <div class="layui-input-block">
+
+                    </div>
+                  {% else %}
+                     <div class="layui-form-item">
+                        <div class="layui-input-block" onclick="this.parentElement.parentElement.action='{{ url_for('club.exit_club') }}';">
+                            {{ form.exit(class="layui-btn") }}
+                        </div>
+                    </div>
+                  {% endif %}
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    layui.use(['form','jquery'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+
+    });
+    $(document).ready(function(){
+        $("#storage").on('click',function () {
+        })
+    });
+
+</script>
+{% endblock %}

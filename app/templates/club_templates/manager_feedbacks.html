@@ -1,10 +1,10 @@
-{% extends "index.html" %}
+{% extends "club_templates/base.html" %}
 {% block content %}
 <!-- Page Heading -->
 
 <hr>
  <div class="form-row">
-    <h1 class="h3 mb-0 text-gray-800" align="center" style="padding-left: 15px;">反馈记录</h1>
+    <h1 class="h3 mb-0 text-gray-800" align="center" style="padding-left: 15px;"> Feedbacks</h1>
   </div>
 <hr />
 <div class="col-12 table-responsive" >
@@ -19,7 +19,7 @@
                       
                     </thead>
                        <tbody>
-                       {% for x in complaint_history %}
+                       {% for x in feedbacks %}
                          <tr>
                           <td>{{ x['Subject'] }}</td>
                           <td>{{ x['Timestamp'] }}</td>

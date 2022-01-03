@@ -1,7 +1,7 @@
 {% extends "user_templates/base.html" %}
 {% block title %}加入社团{% endblock %}
 
-{% block card %}<div class="layui-card-header"><h2>加入社团</h2></div>{% endblock %}
+{% block card %}<div class="layui-card-header"><h2>社团查询</h2></div>{% endblock %}
 {% block body %}
 <div style="text-align: center; width: 900px;">
     <form class="layui-form" method="post" id="searchForm">
@@ -35,11 +35,17 @@
               <tbody>
                 {% for club in search_res %}
                   <tr>
-                    <td>{{club.club_name}}</td>
-                    <td>{{club.club_type}}</td>
-                    <td>{{club.creator.first().as_user.stu_name}}</td>
-                    <td>{{club.club_desp}}</td>
-                    <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.join_club', name=club.club_name) }}';" value="加入" /></td>
+                    <td>{{club.name}}</td>
+                    <td>{{club.type}}</td>
+                    <td>{{club.creator.name}}</td>
+                    <td>{{club.description}}</td>
+                    {% if current_user in club.members %}
+                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.exit_club', name=club.name) }}';" value="退出" /></td>
+                    {% elif current_user == club.creator %}
+                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="" value="删除" /></td>
+                    {% else %}
+                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.join_club', name=club.name) }}';" value="加入" /></td>
+                    {% endif %}
                   </tr>
                 {% endfor %}
               </tbody>

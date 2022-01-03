@@ -1,81 +1,78 @@
 from flask_login import UserMixin
 from . import db, login_manager
+from datetime import datetime
 
-creator_clubs = db.Table('creator_clubs',
-                         db.Column('creator_id', db.Integer, db.ForeignKey('creators.id'), primary_key=True),
-                         db.Column('club_id', db.Integer, db.ForeignKey('clubs.club_name'), primary_key=True)
-                         )
+users_joined_clubs = db.Table('users_joined_clubs',
+                         db.Column('member_id', db.String(32), db.ForeignKey('users.id'), primary_key=True),
+                         db.Column('club_id', db.String(32), db.ForeignKey('clubs.name'), primary_key=True))
 
-members_clubs = db.Table('members_clubs',
-                         db.Column('member_id', db.Integer, db.ForeignKey('members.id'), primary_key=True),
-                         db.Column('club_id', db.Integer, db.ForeignKey('clubs.club_name'), primary_key=True)
-                         )
-
-members_activities = db.Table('members_activities',
-                         db.Column('member_id', db.Integer, db.ForeignKey('members.id'), primary_key=True),
-                         db.Column('activity_id', db.Integer, db.ForeignKey('activities.act_name'), primary_key=True)
-                         )
+users_activities = db.Table('users_activities',
+                         db.Column('user_id', db.String(32), db.ForeignKey('users.id'), primary_key=True),
+                         db.Column('activity_id', db.String(32), db.ForeignKey('activities.name'), primary_key=True))
 
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    stu_id = db.Column(db.String(32), primary_key=True)
-    creator_id = db.Column(db.String(32), db.ForeignKey('creators.id'))
-    member_id = db.Column(db.String(32), db.ForeignKey('members.id'))
-    stu_name = db.Column(db.String(32))
+    id = db.Column(db.String(32), primary_key=True)
+    name = db.Column(db.String(32))
     password = db.Column(db.String(24))
+
+    created_clubs = db.relationship('Club', backref='creator', lazy='dynamic')
+    joined_clubs = db.relationship('Club', secondary=users_joined_clubs, lazy='dynamic',
+                                   backref=db.backref('members', lazy='dynamic'))
+
+    created_activities = db.relationship('Activity', backref='creator', lazy='dynamic')
+    joined_activities = db.relationship('Activity', secondary=users_activities,
+                                        lazy='dynamic', backref=db.backref('members', lazy='dynamic'))
+
+    sent_messages = db.relationship('Message', backref='sender', lazy='dynamic',
+                                    foreign_keys='Message.sender_id')
+    received_messages = db.relationship('Message', backref='receiver', lazy='dynamic',
+                                        foreign_keys='Message.receiver_id')
     
     def get_id(self):
-        return self.stu_id
+        return self.id
     
     def verify_password(self, password):
         return password == self.password
-    
-    # def __repr__(self):
-    #     return '<users %r>' % self.stu_name
 
 
 class Admin(UserMixin, db.Model):
     _tablename__ = 'admins'
-    admin_id = db.Column(db.String(32), primary_key=True)
-
-
-class Creator(db.Model):
-    __tablename__ = 'creators'
-    id = db.Column(db.Integer, primary_key=True)
-    as_user = db.relationship('User', backref='as_creator', lazy=True, uselist=False)
-    created_activities = db.relationship('Activity', backref='creator', lazy='dynamic')
-
-
-class Member(db.Model):
-    __tablename__ = 'members'
-    id = db.Column(db.Integer, primary_key=True)
-    as_user = db.relationship('User', backref='as_member', lazy=True, uselist=False)
+    id = db.Column(db.String(32), primary_key=True)
 
 
 class Club(db.Model):
     __tablename__ = 'clubs'
-    club_name = db.Column(db.String(32), primary_key=True)
-    creator = db.relationship('Creator', secondary=creator_clubs, lazy='dynamic', backref=db.backref('created_clubs', lazy='dynamic'))
-    members = db.relationship('Member', secondary=members_clubs, lazy='dynamic', backref=db.backref('joined_clubs', lazy='dynamic'))
-    club_type = db.Column(db.String(64))
-    club_desp = db.Column(db.String(64))
-    # club_creator = db.Column(db.String(64))
-    activities = db.relationship('Activity', backref='club', lazy='dynamic')
+    name = db.Column(db.String(32), primary_key=True)
+    type = db.Column(db.String(64))
+    description = db.Column(db.String(64))
 
-    # def __repr__(self):
-    #     return '<Club %r>' % self.club_name
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    activities = db.relationship('Activity', backref='club', lazy='dynamic')
 
 
 class Activity(db.Model):
     __tablename__ = 'activities'
-    act_name = db.Column(db.String(32), primary_key=True)
-    act_desp = db.Column(db.String(64))
-    act_time = db.Column(db.String(20))
-    limit_num = db.Column(db.Integer())
-    members = db.relationship('Member', secondary=members_activities, lazy='dynamic', backref=db.backref('joined_activities', lazy='dynamic'))
-    club_name = db.Column(db.String(32), db.ForeignKey('clubs.club_name'))
-    creator_id = db.Column(db.Integer, db.ForeignKey('creators.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    description = db.Column(db.String(64))
+    time = db.Column(db.String(20))
+    limit_num = db.Column(db.Integer)
+    club_name = db.Column(db.String(32), db.ForeignKey('clubs.name'))
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class Message(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    club_name = db.Column(db.String(32))
+    state = db.Column(db.Enum('waiting', 'accepted', 'rejected'))
+    type = db.Column(db.Enum('club_invitation', 'club_request', 'club_creation', 'remove_member', 'exit_club'))
+    timestamp = db.Column(db.DateTime(), default=datetime.now)
 
 
 @login_manager.user_loader

@@ -44,4 +44,17 @@ class NewActivityForm(FlaskForm):
     act_desp = StringField(validators=[DataRequired()])
     act_time = StringField(validators=[DataRequired()])
     limit_num = IntegerField(validators=[])
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'添加')
+
+
+class ClubInfo(FlaskForm):
+    club_name = StringField(validators=[DataRequired(), Length(1, 64)])
+    club_type = SelectField(choices=(('志愿类'), ('体育类'), ('音乐类'), ('其他类')))
+    club_desp = StringField(validators=[DataRequired(), Length(1, 64)])
+    submit = SubmitField(u'更改')
+    exit = SubmitField(u'退出社团')
+
+
+class AddMember(FlaskForm):
+    stu_id = StringField(validators=[DataRequired()])
+    submit = SubmitField(u'添加')
