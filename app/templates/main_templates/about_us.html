@@ -2,13 +2,187 @@
 
 {% block body %}
 <div class="layui-container" style="margin-top: 10px;">
-<div class="layui-row layui-col-space30">
-    <div class="layui-col-md12">
-        <h2 style="text-align: center;">CS3604 软件开发与项目管理 大作业</h2>
-        <hr>
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-md12">
+            <h2 style="text-align: center;">CS3604 软件开发与项目管理 大作业</h2>
+            <hr>
+        </div>
     </div>
 </div>
-</div>
 
+<div class="layui-container" style="margin-top: 10px;">
+<div class="layui-row layui-col-space50">
+  <div class="layui-col-md4">
+      <div id="container1" style="height: 500%"></div>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+      <script type="text/javascript">
+          var myChart = echarts.init(document.getElementById("container1"));
+          var data_all = {{ charts1|safe }};
+          var data = new Array(data_all.length);
+          for (var i=0;i<data_all.length;i++) {
+              data[i] = {name: data_all[i]['name'], value: data_all[i]['value']};
+          }
+          myChart.setOption({
+              tooltip: {
+                  trigger: 'item'
+              },
+              // legend: {
+              //     top: '5%',
+              //     left: 'center'
+              // },
+              series: [{
+                  name: '社团个数',
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                      borderRadius: 10,
+                      borderColor: '#fff',
+                      borderWidth: 2
+                  },
+                  label: {
+                      show: false,
+                      position: 'center'
+                  },
+                  emphasis: {
+                      label: {
+                          show: true,
+                          fontSize: '40',
+                          fontWeight: 'bold'
+                      }
+                  },
+                  labelLine: {
+                      show: false
+                  },
+                  data: data
+              }]
+          });
+      </script>
+  </div>
+  <div class="layui-col-md4" style="margin-top: 25px;">
+    <div id="container2" style="height: 400%"></div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById("container2"));
+        var data = {{ charts2|safe }};
+        var data_len = data.length;
+        var series = new Array(data_len);
+        var source = [['类型'],
+                      ['各类型社团加入人数']];
+        for (var i=0; i<data_len; i++) {
+            series.push({ type: 'bar' });
+            source[0].push(data[i]['type']);
+            source[1].push(data[i]['num'])
+        }
+
+        myChart.setOption({
+            legend: {},
+            tooltip: {},
+            dataset: {
+            source: source
+            },
+            xAxis: { type: 'category' },
+            yAxis: {},
+            series: series
+            });
+
+    </script>
+  </div>
+  <div class="layui-col-md4">
+      <div id="container3" style="height: 500%"></div>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+      <script type="text/javascript">
+          var myChart = echarts.init(document.getElementById("container3"));
+          var data = {{ charts3|safe }}
+          var gaugeData = [
+              {
+                value: data['users'],
+                name: '个用户',
+                title: {
+                  offsetCenter: ['25%', '-40%']
+                },
+                detail: {
+                  valueAnimation: true,
+                  offsetCenter: ['-10%', '-40%']
+                }
+              },
+              {
+                value: data['clubs'],
+                name: '个社团',
+                title: {
+                  offsetCenter: ['25%', '0%']
+                },
+                detail: {
+                  valueAnimation: true,
+                  offsetCenter: ['-10%', '0%']
+                }
+              },
+              {
+                value: data['activities'],
+                name: '个活动',
+                title: {
+                  offsetCenter: ['25%', '40%']
+                },
+                detail: {
+                  valueAnimation: true,
+                  offsetCenter: ['-10%', '40%']
+                }
+              }
+            ];
+          myChart.setOption({
+              series: [
+                {
+                  type: 'gauge',
+                  startAngle: 90,
+                  endAngle: -270,
+                  pointer: {
+                    show: false
+                  },
+                  progress: {
+                    show: true,
+                    overlap: false,
+                    roundCap: true,
+                    clip: false,
+                    itemStyle: {
+                      borderWidth: 1,
+                      borderColor: '#464646'
+                    }
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      width: 40
+                    }
+                  },
+                  splitLine: {
+                    show: false,
+                    distance: 0,
+                    length: 10
+                  },
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    show: false,
+                    distance: 50
+                  },
+                  data: gaugeData,
+                  title: {
+                    fontSize: 14
+                  },
+                  detail: {
+                    fontSize: 40,
+                    color: 'auto',
+                    borderColor: 'auto',
+                    borderRadius: 20,
+                    borderWidth: 0,
+                    formatter: '{value}'
+                  }
+                }
+              ]
+            });
+      </script>
+  </div>
+</div>
+</div>
 
 {% endblock %}

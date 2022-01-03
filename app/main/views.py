@@ -3,7 +3,7 @@ from flask_login import login_user, current_user
 from . import main
 from .forms import SearchClubForm, Register, Login
 from .. import db
-from ..models import User, Club, Admin
+from ..models import User, Club, Admin, Activity
 import wtforms
 
 
@@ -76,4 +76,19 @@ def all_clubs():
 
 @main.route('/about_us')
 def about_us():
-    return render_template('main_templates/about_us.html')
+    clubform = SearchClubForm()
+    all_club_types = clubform.club_type.choices[1:]
+    typenum = [{'name': clubtype,
+                'value':len(Club.query.filter_by(type=clubtype).all())}
+               for clubtype in all_club_types]
+    allsum = {'users': len(User.query.all()),
+              'clubs': len(Club.query.all()),
+              'activities': len(Activity.query.all())}
+    joinednum = [{'num': sum([len(club.members.all())
+                              for club in Club.query.filter_by(type=clubtype).all()]),
+                  'type': clubtype}
+                 for clubtype in all_club_types]
+    return render_template('main_templates/about_us.html',
+                           charts1=typenum,
+                           charts2=joinednum,
+                           charts3=allsum)
