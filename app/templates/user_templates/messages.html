@@ -5,38 +5,173 @@
 
 {% block body %}
     <div id="show_messages" style="width: 500px;">
-        {% for message in current_user.received_messages.order_by()|selectattr('state', 'equalto', 'waiting') %}
+        <h3>待处理：</h3>
+        {% for message in current_user.received_messages|selectattr('state', 'equalto', 'waiting')|sort(attribute='timestamp', reverse=True) %}
             <div class="layui-panel" style="margin: 15px;">
-                {% if message.type == 'club_request' %}
-                    <div>
+                <div>
+                    <div class="layui-row" style="padding: 15px 15px 0px 15px;">{{ '{:%Y-%m-%d %H:%M:%S}'.format(message.timestamp) }}</div>
+                    {% if message.type == 'club_request' %}
+                        {% if message.phase == 'request' %}
+                            <div class="layui-row" style="padding: 15px;">
+                                用户（{{ message.sender_id }}, {{ message.sender.name }}）申请加入您的社团（{{ message.club_name }}）。
+                            </div>
+                            <div class="layui-row" style="padding: 15px;">
+                                <div class="layui-col-md6" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='accept') }}';">
+                                </div>
+                                <div class="layui-col-md6" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='reject') }}';">
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="layui-row" style="padding: 15px;">
+                                {% if message.action == 'accepted' %}
+                                    您已加入用户（{{ message.sender_id }}, {{ message.sender.name }}）的社团（{{ message.club_name }}）。
+                                {% else %}
+                                    您被拒绝加入用户（{{ message.sender_id }}, {{ message.sender.name }}）的社团（{{ message.club_name }}）。
+                                {% endif %}
+                            </div>
+                            <div class="layui-row" style="padding: 15px;">
+                                <div class="layui-col-md12" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="确定" onclick="location.href = '{{ url_for('user.handle_reply_message', id=message.id) }}';">
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% elif message.type == 'club_invitation'%}
+                        {% if message.phase == 'request' %}
+                            <div class="layui-row" style="padding: 15px;">
+                                用户（{{ message.sender_id }}, {{ message.sender.name }}）邀请您加入TA的社团（{{ message.club_name }}）。
+                            </div>
+                            <div class="layui-row" style="padding: 15px;">
+                                <div class="layui-col-md6" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='accept') }}';">
+                                </div>
+                                <div class="layui-col-md6" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='reject') }}';">
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="layui-row" style="padding: 15px;">
+                                {% if message.action == 'accepted' %}
+                                    用户（{{ message.sender_id }}, {{ message.sender.name }}）已加入社团（{{ message.club_name }}）。
+                                {% else %}
+                                    用户（{{ message.sender_id }}, {{ message.sender.name }}）拒绝加入社团（{{ message.club_name }}）。
+                                {% endif %}
+                            </div>
+                            <div class="layui-row" style="padding: 15px;">
+                                <div class="layui-col-md12" style="text-align: center;">
+                                    <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="确定" onclick="location.href = '{{ url_for('user.handle_reply_message', id=message.id) }}';">
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% elif message.type == 'remove_member' %}
                         <div class="layui-row" style="padding: 15px;">
-                            用户（{{ message.sender_id }}, {{ message.sender.name }}）申请加入您的社团（{{ message.club_name }}）。
+                            用户（{{ message.sender_id }}, {{ message.sender.name }}）已将您移出TA的社团（{{ message.club_name }}）。
                         </div>
                         <div class="layui-row" style="padding: 15px;">
-                            <div class="layui-col-md6" style="text-align: center;">
-                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='accept') }}';">
-                            </div>
-                            <div class="layui-col-md6" style="text-align: center;">
-                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_request', id=message.id, action='reject') }}';">
+                            <div class="layui-col-md12" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="确定" onclick="location.href = '{{ url_for('user.handle_reply_message', id=message.id) }}';">
                             </div>
                         </div>
-                    </div>
-                {% elif message.type == 'club_invitation' %}
-                    <div>
+                    {% elif message.type == 'exit_club' %}
                         <div class="layui-row" style="padding: 15px;">
-                            用户（{{ message.sender_id }}, {{ message.sender.name }}）邀请您加入TA的社团（{{ message.club_name }}）。
+                            用户（{{ message.sender_id }}, {{ message.sender.name }}）已退出您的社团（{{ message.club_name }}）。
                         </div>
                         <div class="layui-row" style="padding: 15px;">
-                            <div class="layui-col-md6" style="text-align: center;">
-                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="接受" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='accept') }}';">
-                            </div>
-                            <div class="layui-col-md6" style="text-align: center;">
-                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="拒绝" onclick="location.href = '{{ url_for('user.handle_club_invitation', id=message.id, action='reject') }}';">
+                            <div class="layui-col-md12" style="text-align: center;">
+                                <input class="layui-btn layui-btn-primary layui-btn-sm" type="button" value="确定" onclick="location.href = '{{ url_for('user.handle_reply_message', id=message.id) }}';">
                             </div>
                         </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
+    </div>
+    <hr>
+    <div id="show_messages" style="width: 500px; margin-bottom: 30px;">
+        <h3>已处理：</h3>
+
+        <div class="layui-tab" style="margin-top: 10px;">
+
+            <ul class="layui-tab-title">
+                <li class="layui-this">收到的回复</li>
+                <li>发送的回复</li>
+            </ul>
+
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+                    {% for message in current_user.received_messages|selectattr('phase', 'equalto', 'reply')|selectattr('state', 'equalto', 'done')|sort(attribute='timestamp', reverse=True) %}
+                        <div class="layui-panel" style="margin: 0px 15px 15px 15px;">
+                            <div>
+                                <div class="layui-row" style="padding: 15px 0px 0px 15px;">{{ '{:%Y-%m-%d %H:%M:%S}'.format(message.timestamp) }}</div>
+                                <hr>
+                                {% if message.type == 'club_request' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                        {% if message.action == 'accepted' %}
+                                            已被接受：您申请加入用户（{{ message.sender_id }}, {{ message.sender.name }}）的社团（{{ message.club_name }}）。
+                                        {% else %}
+                                            已被拒绝：您申请加入用户（{{ message.sender_id }}, {{ message.sender.name }}）的社团（{{ message.club_name }}）。
+                                        {% endif %}
+                                    </div>
+                                {% elif message.type == 'club_invitation' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                        {% if message.action == 'accepted' %}
+                                            已被接受：您邀请用户（{{ message.sender_id }}, {{ message.sender.name }}）加入您的社团（{{ message.club_name }}）。
+                                        {% else %}
+                                            已被拒绝：您邀请用户（{{ message.sender_id }}, {{ message.sender.name }}）加入您的社团（{{ message.club_name }}）。
+                                        {% endif %}
+                                    </div>
+                                {% elif message.type == 'remove_member' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;"">
+                                            用户（{{ message.sender_id }}, {{ message.sender.name }}）已将您移出TA的社团（{{ message.club_name }}）。
+                                    </div>
+                                {% elif message.type == 'exit_club' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                            用户（{{ message.sender_id }}, {{ message.sender.name }}）已退出您的社团（{{ message.club_name }}）。
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="layui-tab-item">
+                    {% for message in current_user.sent_messages|selectattr('phase', 'equalto', 'reply')|sort(attribute='timestamp', reverse=True) %}
+                        <div class="layui-panel" style="margin: 0px 15px 15px 15px;">
+                            <div>
+                                <div class="layui-row" style="padding: 15px 15px 0px 15px;">{{ '{:%Y-%m-%d %H:%M:%S}'.format(message.timestamp) }}</div>
+                                <hr>
+                                {% if message.type == 'club_request' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                        {% if message.action == 'accepted' %}
+                                            已接受：用户（{{ message.receiver_id }}, {{ message.receiver.name }}）申请加入您的社团（{{ message.club_name }}）。
+                                        {% else %}
+                                            已拒绝：用户（{{ message.receiver_id }}, {{ message.receiver.name }}）申请加入您的社团（{{ message.club_name }}）。
+                                        {% endif %}
+                                    </div>
+                                {% elif message.type == 'club_invitation' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                        {% if message.action == 'accepted' %}
+                                            已接受：用户（{{ message.receiver_id }}, {{ message.receiver.name }}）邀请您加入TA的社团（{{ message.club_name }}）。
+                                        {% else %}
+                                            已拒绝：用户（{{ message.receiver_id }}, {{ message.receiver.name }}）邀请您加入TA的社团（{{ message.club_name }}）。
+                                        {% endif %}
+                                    </div>
+                                {% elif message.type == 'remove_member' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                            您已将用户（{{ message.receiver_id }}, {{ message.receiver.name }}）移出社团（{{ message.club_name }}）。
+                                    </div>
+                                {% elif message.type == 'exit_club' %}
+                                    <div class="layui-row" style="padding: 0px 15px 15px 15px;">
+                                            您已退出用户（{{ message.receiver_id }}, {{ message.receiver.name }}）的社团（{{ message.club_name }}）。
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

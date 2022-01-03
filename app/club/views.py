@@ -39,11 +39,20 @@ def club_info():
 def exit_club():
     club = Club.query.get(session['club_name'])
     if club:
+        message = Message()
+        message.sender = current_user
+        message.receiver = club.creator
+        message.club_name = club.name
+        message.state = 'waiting'
+        message.type = 'exit_club'
+        message.phase = 'reply'
+
         for activity in club.activities:
             if current_user in activity.members.all():
                 activity.members.remove(current_user)
+
         club.members.remove(current_user)
-        db.session.add_all([club, current_user])
+        db.session.add_all([club, current_user, message])
         db.session.commit()
         flash('退出社团成功！')
     else:
@@ -172,13 +181,15 @@ def add_members():
             message_temp1 = Message.query.filter_by(sender_id=current_user.id,
                                                     receiver_id=user.id,
                                                     club_name=club.name,
+                                                    type='club_invitation',
                                                     state='waiting',
-                                                    type='club_invitation').first()
+                                                    phase='request').first()
             message_temp2 = Message.query.filter_by(sender_id=user.id,
                                                     receiver_id=current_user.id,
                                                     club_name=club.name,
+                                                    type='club_request',
                                                     state='waiting',
-                                                    type='club_request').first()
+                                                    phase='request').first()
             if message_temp1:
                 flash('您已发送邀请，请耐心等待！')
             elif message_temp2:
@@ -188,8 +199,9 @@ def add_members():
                 message.sender_id = current_user.id
                 message.receiver_id = user.id
                 message.club_name = club.name
-                message.state = 'waiting'
                 message.type = 'club_invitation'
+                message.state = 'waiting'
+                message.phase = 'request'
                 db.session.add(message)
                 db.session.commit()
                 flash('已发送加入邀请，请等待同学处理！')
@@ -207,8 +219,20 @@ def remove_member():
     user = User.query.get(request.args.get('id'))
     club = Club.query.get(session['club_name'])
     if user and club:
+        message = Message()
+        message.sender = current_user
+        message.receiver = user
+        message.club_name = club.name
+        message.state = 'waiting'
+        message.type = 'remove_member'
+        message.phase = 'reply'
+
+        for activity in club.activities:
+            if user in activity.members.all():
+                activity.members.remove(user)
+
         club.members.remove(user)
-        db.session.add(club)
+        db.session.add_all([message, club, user])
         db.session.commit()
         flash('删除成员成功！')
     else:

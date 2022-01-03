@@ -70,8 +70,10 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     club_name = db.Column(db.String(32))
-    state = db.Column(db.Enum('waiting', 'accepted', 'rejected'))
     type = db.Column(db.Enum('club_invitation', 'club_request', 'club_creation', 'remove_member', 'exit_club'))
+    state = db.Column(db.Enum('waiting', 'done'))
+    action = db.Column(db.Enum('accepted', 'rejected', 'read'))
+    phase = db.Column(db.Enum('request', 'reply'))  # Request需要得到回复；reply只是告知receiver，无需对方回复
     timestamp = db.Column(db.DateTime(), default=datetime.now)
 
 
