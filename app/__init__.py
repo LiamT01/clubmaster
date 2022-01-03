@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import os
 
+admin_id = 'admin'
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 db = SQLAlchemy()
@@ -29,8 +30,8 @@ def create_app():
     from .club import club as club_blueprint
     app.register_blueprint(club_blueprint)
 
-    from .member import member as member_blueprint
-    app.register_blueprint(member_blueprint)
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint)
 
     from .user import user as user_blueprint
     app.register_blueprint(user_blueprint)

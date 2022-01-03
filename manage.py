@@ -8,7 +8,7 @@ manager = Manager(app)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Club=Club, Activity=Activity, Message=Message)
+    return dict(app=app, db=db, User=User, Club=Club, Activity=Activity, Message=Message, Admin=Admin)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))

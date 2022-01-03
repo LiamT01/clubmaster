@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="../static/layui/css/layui.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <style>
+      .alert{position:relative;padding:.75rem 1.25rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
+      .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
+      .alert-warning{color:#856404;background-color:#fff3cd;border-color:#ffeeba}
+      .close{float:right;font-size:1.5rem;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.5}
+      .close:focus,.close:hover{color:#000;text-decoration:none;opacity:.75}
+      .close:not(:disabled):not(.disabled){cursor:pointer}
+      button.close{padding:0;background-color:transparent;border:0;-webkit-appearance:none}
+      .close{padding:1rem;margin:-1rem -1rem -1rem auto}
+      .alert-dismissible .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
+  </style>
+  {% block head %}{% endblock %}
+  <style>{% block style %}{% endblock %}</style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <a href="{{ url_for('admin.index') }}"><div class="layui-logo">松露-管理员主页</div></a>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item">
+        <a href="javascript:;">
+          <img src="../static/icon.jpg" class="layui-nav-img">
+          Admin
+        </a>
+        <dl class="layui-nav-child">
+            <dd><a href="{{ url_for('admin.logout') }}">退出登录</a></dd>
+        </dl>
+      </li>
+
+<!--      <li class="layui-nav-item" style="margin-left: 50px;"><a href="{{ url_for('admin.logout') }}">退出登录</a></li>-->
+
+<!--        <li class="layui-nav-item" style="margin-left: 50px; width: 125px;" lay-header-event="menuRight" lay-unselect>-->
+<!--            <a href="javascript:;">消息中心&nbsp<span class="layui-badge layui-bg-black">{{ current_user.received_messages.all()|selectattr("state", "equalto", "waiting")|list|length }}</span></a>-->
+<!--        </li>-->
+    </ul>
+  </div>
+
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree lay"  lay-filter="test">
+        <li class="layui-nav-item">
+            <a href="{{ url_for('admin.review_clubs') }}">社团审核<span class="layui-badge layui-bg-green">{{ current_user.received_messages.all()|selectattr("state", "equalto", "waiting")|list|length }}</span>
+</a>
+        </li>
+        <li class="layui-nav-item">
+          <a href="{{ url_for('admin.search') }}">社团查询</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="layui-card layui-row layui-col-space10" style="margin:15px 10px;width:100%;">
+<!--        {% for message in get_flashed_messages() %}-->
+<!--        <div class="alert alert-warning">-->
+<!--            <button type="button" class="close" data-dismiss="alert">&times;</button>-->
+<!--                {{ message }}-->
+<!--        </div>-->
+<!--        {% endfor %}-->
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+            <!--        <button type="button" class="close" data-dismiss="alert">&times;</button>-->
+                <button class="layui-btn layui-btn-xs layui-btn-primary" onclick="this.parentElement.remove()">关闭</button>
+                &nbsp
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% block card %}{% endblock %}
+        <div class="layui-card-body">
+        {% block body %}
+        {% endblock %}
+        </div>
+    </div>
+  </div>
+
+  <div class="layui-footer">
+    Copyright 2021-2022 Construct&nbsp;&nbsp;|&nbsp;&nbsp;版权所有:涂宏伟组
+  </div>
+</div>
+<script src="../static/layui/layui.js"></script>
+
+<script>
+//JS
+layui.use(['element', 'layer', 'util'], function(){
+  var element = layui.element
+  ,layer = layui.layer
+  ,util = layui.util
+  ,$ = layui.$;
+
+  //头部事件
+  util.event('lay-header-event', {
+    //左侧菜单事件
+    menuLeft: function(othis){
+      layer.msg('展开左侧菜单的操作', {icon: 0});
+    }
+    ,menuRight: function(){
+      layer.open({
+        type: 1
+        ,title: '查看消息'
+        ,content: document.getElementById('show_messages').innerHTML
+        ,area: ['400px', '100%']
+        ,offset: 'rt' //右上角
+        ,anim: 5
+        ,shadeClose: true
+        ,scrollbar: true
+      });
+    }
+  });
+});
+
+function accept_club_invitation(ptr) {
+    ptr.parentNode.parentNode.parentNode.remove();
+    location.href = "{{ url_for('admin.handle_club_invitation') }}";
+}
+</script>
+
+{% block script %}
+{% endblock %}
+</body>
+</html>

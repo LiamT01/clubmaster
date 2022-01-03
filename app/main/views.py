@@ -21,7 +21,7 @@ def home():
 def register():
     form = Register()
     if form.validate_on_submit():
-        if User.query.get(form.account_reg.data):
+        if User.query.get(form.account_reg.data) or Admin.query.get(form.account_reg.data):
             flash('该学号已存在！')
         else:
             user = User()
@@ -40,13 +40,17 @@ def register():
 def login():
     form = Login()
     if form.validate_on_submit():
+        admin = Admin.query.filter_by(id=form.account_login.data, password=form.password_login.data).first()
         user = User.query.filter_by(id=form.account_login.data, password=form.password_login.data).first()
-        if user is None:
+        if user is None and admin is None:
             flash('账号或密码错误！')
             return redirect(url_for('.home'))
-        else:
+        elif user is not None:
             login_user(user)
             return redirect(url_for('user.index'))
+        elif admin is not None:
+            login_user(admin)
+            return redirect(url_for('admin.index'))
 
 
 @main.route('/all_clubs', methods=['GET', 'POST'])

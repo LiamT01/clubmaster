@@ -1,4 +1,4 @@
-{% extends "user_templates/base.html" %}
+{% extends "admin_templates/base.html" %}
 {% block title %}加入社团{% endblock %}
 
 {% block card %}<div class="layui-card-header"><h2>社团查询</h2></div>{% endblock %}
@@ -39,13 +39,7 @@
                     <td>{{club.type}}</td>
                     <td>{{club.creator.name}}</td>
                     <td>{{club.description}}</td>
-                    {% if current_user in club.members %}
-                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.exit_club', name=club.name) }}';" value="退出" /></td>
-                    {% elif current_user == club.creator %}
-                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.delete_club', name=club.name) }}';" value="删除" /></td>
-                    {% else %}
-                        <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.join_club', name=club.name) }}';" value="加入" /></td>
-                    {% endif %}
+                    <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('admin.delete_club', name=club.name) }}';" value="删除" /></td>
                   </tr>
                 {% endfor %}
               </tbody>

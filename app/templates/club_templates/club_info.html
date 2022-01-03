@@ -30,15 +30,11 @@
                     </div>
                     </div>
                   {% if session['role'] == 'creator' %}
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" style="padding-right: 100px;">
                         <div class="layui-input-block">
                             {{ form.submit(class="layui-btn") }}
-                            <input type="button" class="layui-btn" value="删除该社团" onclick="">
+                            <input type="button" class="layui-btn" value="删除该社团" onclick="location.href='{{ url_for('club.delete_club', name=club.name) }}';">
                         </div>
-                    </div>
-                  <div class="layui-form-item">
-                        <div class="layui-input-block">
-
                     </div>
                   {% else %}
                      <div class="layui-form-item">

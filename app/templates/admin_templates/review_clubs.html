@@ -1,0 +1,61 @@
+{% extends "admin_templates/base.html" %}
+{% block title %}加入社团{% endblock %}
+
+{% block card %}<div class="layui-card-header"><h2>社团审核</h2></div>{% endblock %}
+{% block body %}
+<div style="text-align: center; width: 900px;">
+    <div id="remove">
+        <div class="layui-inline">
+            <table lay-even id="result" lay-filter="re">
+              <thead>
+                <tr>
+                  <th lay-data="{field:'club_name', width:180, align:'center'}">社团名称</th>
+                  <th lay-data="{field:'club_type', width:180, align:'center'}">社团类型</th>
+                  <th lay-data="{field:'club_creator_id', width:160, align:'center'}">申请者学号</th>
+                    <th lay-data="{field:'club_creator_name', width:120, align:'center'}">申请者姓名</th>
+                  <th lay-data="{field:'club_desp', width:300, align:'center'}">社团描述</th>
+                  <th lay-data="{field:'club_join', width:120, align:'center'}">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for message in current_user.received_messages|selectattr('state', 'equalto', 'waiting') %}
+                  <tr>
+                    <td>{{message.club_name}}</td>
+                    <td>{{message.club_type}}</td>
+                    <td>{{message.sender_id}}</td>
+                      <td>{{message.sender.name}}</td>
+                    <td>{{message.club_description}}</td>
+                    <td>
+                        <input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('admin.handle_club_creation', id=message.id, action='accept') }}';" value="通过" />
+                        <input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('admin.handle_club_creation', id=message.id, action='reject') }}';" value="拒绝" />
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+<!--    <table id="test" lay-filter="test"></table>-->
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    layui.use(['form','table','jquery'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.$;
+
+        table.init('re', {
+              height: 390
+              ,limit: 7
+              ,page: true
+        });
+    });
+    </script>
+    <script type="text/html" id="barDemo">
+      <a class="layui-btn layui-btn-sm" lay-event="borr">加入</a>
+    </script>
+{% endblock %}
+

@@ -2,7 +2,7 @@ from flask import render_template, session, redirect, url_for, flash, request, j
 from flask_login import login_user, logout_user, login_required, current_user
 from . import user
 from .forms import SearchClubForm, Register, Login, ChangePasswordForm, NewStoreForm, EditInfoForm
-from .. import db
+from .. import db, admin_id
 from ..models import User, Club, Message
 from datetime import datetime
 
@@ -11,18 +11,17 @@ from datetime import datetime
 @user.route('/index')
 @login_required
 def index():
-    c = current_user.created_clubs
-    m = current_user.joined_clubs
-    session['cclubs'] = [x.name for x in c]
-    session['mclubs'] = [x.name for x in m]
-
+    session['cclubs'] = [x.name for x in current_user.created_clubs]
+    session['mclubs'] = [x.name for x in current_user.joined_clubs]
     return render_template('user_templates/index.html')
 
 
 @user.route('/messages')
 @login_required
 def messages():
-    return render_template('user_templates/messages.html')
+    session['cclubs'] = [x.name for x in current_user.created_clubs]
+    session['mclubs'] = [x.name for x in current_user.joined_clubs]
+    return render_template('user_templates/messages.html', admin_id=admin_id)
 
 
 @user.route('/logout')
@@ -66,15 +65,38 @@ def create_club():
             if Club.query.get(request.form.get('club_name')):
                 flash(u'该社团名称已经存在，请重新创建！')
             else:
-                club = Club()
-                club.name = form.club_name.data
-                club.type = form.club_type.data
-                club.description = form.club_desp.data
-                club.creator = current_user
-                db.session.add(club)
-                db.session.commit()
-                flash(u'社团创建成功！')
-                session['cclubs'] = [club.name for club in current_user.created_clubs.all()]
+                message_temp = Message.query.filter_by(admin_receiver_id=admin_id,
+                                                       club_name=form.club_name.data,
+                                                       type='club_creation',
+                                                       state='waiting',
+                                                       phase='request').first()
+                if message_temp:
+                    if message_temp.sender == current_user:
+                        flash(u"您已发送该社团的创建申请，请耐心等待管理员审核！")
+                    else:
+                        flash(u'已有他人发送该社团的创建申请，您暂时无法申请！')
+                else:
+                    message = Message()
+                    message.sender_id = current_user.id
+                    message.admin_receiver_id = admin_id
+                    message.club_name = form.club_name.data
+                    message.club_type = form.club_type.data
+                    message.club_description = form.club_desp.data
+                    message.type = 'club_creation'
+                    message.state = 'waiting'
+                    message.phase = 'request'
+                    db.session.add(message)
+                    db.session.commit()
+                    flash('已发送社团创建申请，请等待管理员审核！')
+                    # club = Club()
+                    # club.name = form.club_name.data
+                    # club.type = form.club_type.data
+                    # club.description = form.club_desp.data
+                    # club.creator = current_user
+                    # db.session.add(club)
+                    # db.session.commit()
+                    # flash(u'社团创建成功！')
+                    # session['cclubs'] = [club.name for club in current_user.created_clubs.all()]
         else:
             flash(form.errors)
         return redirect(url_for('.create_club'))
@@ -121,6 +143,37 @@ def join_club(name):
         # m = current_user.joined_clubs.all()
         # session['mclubs'] = [x.name for x in m]
         # flash("加入成功！")
+    return redirect(url_for('.search'))
+
+
+@user.route('/delete_club', methods=['GET', 'POST'])
+@login_required
+def delete_club():
+    club = Club.query.get(request.args.get('name'))
+    if club:
+        for member in club.members.all():
+            message = Message()
+            message.sender = current_user
+            message.receiver = member
+            message.club_name = club.name
+            message.type = 'club_deletion'
+            message.state = 'waiting'
+            message.phase = 'reply'
+            db.session.add(message)
+        message = Message()
+        message.sender = current_user
+        message.receiver = current_user
+        message.club_name = club.name
+        message.type = 'club_deletion'
+        message.state = 'done'
+        message.phase = 'reply'
+        db.session.add(message)
+        db.session.delete(club)
+        db.session.commit()
+        session['cclubs'].remove(club.name)
+        flash('社团删除成功！')
+    else:
+        flash('该社团不存在！')
     return redirect(url_for('.search'))
 
 

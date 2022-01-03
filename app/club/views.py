@@ -34,6 +34,37 @@ def club_info():
                            cclubs=session.get('cclubs'), mclubs=session.get('mclubs'))
 
 
+@club.route('/delete_club', methods=['GET', 'POST'])
+@login_required
+def delete_club():
+    club = Club.query.get(request.args.get('name'))
+    if club:
+        for member in club.members.all():
+            message = Message()
+            message.sender = current_user
+            message.receiver = member
+            message.club_name = club.name
+            message.type = 'club_deletion'
+            message.state = 'waiting'
+            message.phase = 'reply'
+            db.session.add(message)
+        message = Message()
+        message.sender = current_user
+        message.receiver = current_user
+        message.club_name = club.name
+        message.type = 'club_deletion'
+        message.state = 'done'
+        message.phase = 'reply'
+        db.session.add(message)
+        db.session.delete(club)
+        db.session.commit()
+        session['cclubs'].remove(club.name)
+        flash('社团删除成功！')
+    else:
+        flash('该社团不存在！')
+    return redirect(url_for('user.index'))
+
+
 @club.route('/exit_club', methods=['GET', 'POST'])
 @login_required
 def exit_club():

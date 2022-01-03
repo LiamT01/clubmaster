@@ -1,0 +1,49 @@
+{% extends "admin_templates/base.html" %}
+{% block title %}管理员信息设置{% endblock %}
+
+{% block card %}
+    <div class="layui-card-header">
+        <h2>修改个人信息</h2>
+<!--        <button class="layui-btn layui-btn-lg" style="float:right;margin-top:-50px;margin-right:40px;" id="storage">-->
+<!--            <i class="layui-icon">&#xe608;</i>新书入库-->
+<!--        </button>-->
+    </div>
+{% endblock %}
+
+
+{% block body %}
+<!--<fieldset class="layui-elem-field layui-field-title">-->
+<!--&lt;!&ndash;  <legend>修改个人信息</legend>&ndash;&gt;-->
+
+<!--  <div class="layui-field-box" style="font-size: medium;line-height: 30px;">-->
+<!--&lt;!&ndash;      <br />&ndash;&gt;-->
+      <div style="text-align: left">
+          <div class="layui-inline">
+              <form class="layui-form" method="post">
+                {{ form.csrf_token }}
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="font-size: medium">账&nbsp&nbsp&nbsp&nbsp号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="{{ current_user.id }}" readonly="readonly" class="layui-input" style="width:100%">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="font-size: medium">{{ form.name.label }}：</label>
+                    <div class="layui-input-block">
+                        {{ form.name(class="layui-input", style="width:100%") }}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="font-size: medium">
+                        <div class="layui-input-inline login-btn">
+                            {{ form.submit(class="layui-btn") }}
+                        </div>
+                    </div>
+                </div>
+              </form>
+          </div>
+      </div>
+
+<!--  </div>-->
+<!--</fieldset>-->
+{% endblock %}
