@@ -1,0 +1,132 @@
+{% extends 'user_templates/base.html' %}
+{% block title %}填写问卷{% endblock %}
+
+{% block card %}
+    <div class="layui-card-header">
+        <h2>填写问卷</h2>
+    </div>
+{% endblock %}
+{% block body %}
+
+<div style="width: 800px; margin-bottom: 50px;">
+
+<div class="layui-progress layui-progress-big" lay-showPercent="yes">
+  <div class="layui-progress-bar layui-bg-green" id="progress"></div>
+</div>
+
+</br>
+
+<form class='layui-form' action='' id='form'>
+    <div class="layui-form-item question">
+        <label class="layui-form-label">复选框</label>
+        <div class="layui-input-block">
+          <input type="checkbox" name="like[write]" title="写作">
+          <input type="checkbox" name="like[read]" title="阅读">
+          <input type="checkbox" name="like[dai]" title="发呆">
+        </div>
+    </div>
+    <div class="layui-form-item question">
+        <div class="layui-input-block" style="text-align: center;">
+            <button type="button" class='layui-btn' id='submit'>提交</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+
+<script>
+    let currentRound = 1;
+
+    function updateProgress(){
+        let percentage = (currentRound / {{ totalRound }} * 100).toFixed(2).toString() + '%';
+        $('#progress').attr('lay-percent', percentage);
+        layui.element.render('progress');
+    }
+
+    function getAns(){
+        for (question in $('#form').children('div[class="layui-form-item question"]')) {
+            console.log($('#form').children().length)
+        }
+    }
+
+    function getQuestions(round, ans){
+        $.post(
+            "{{ url_for('user.handle_questionnaire') }}",
+            {
+                'round': 1,
+                'ans': ans
+            },
+            function(data, status){
+                $('.question').remove();
+                for (i = 1; i <= data[1].length; i++) {
+                    _question = $('<div class="layui-form-item question"></div>').attr('id', data[1][i - 1]);
+                    _options = $('<div class="layui-input-block"></div>');
+    
+                    let query = data[2][i.toString()]['query'];
+                    _question.append($('<label class="">' + i + '. ' + query + '</label>').css({
+                        'width': '300px',
+                        'text-align': 'left',
+                        'font-size': '15px'
+                    }));
+
+                    let options = data[2][i.toString()]['options'];
+                    for (option in options) {
+                        _options.append(
+                            $("<input></input>").attr({
+                                type: 'checkbox',
+                                name: option,
+                                title: options[option]
+                            })
+                            );
+                    }
+                    _question.append(_options).append('</br>');
+                    $('#form').append(_question);          
+                }
+                $('#form').append(
+                    $('<div></div>').attr('class', 'layui-input-block')
+                                    .css('text-align', 'center')
+                                    .append('<button type="button" class="layui-btn" id="submit">提交</button>')
+                                    .click(function(){
+                                        currentRound += 1;
+                                        updateProgress();
+                                        ans = getAns();
+                                    })
+                )
+                layui.form.render(); // !!!!!!!IMPORTANT
+            }); 
+    }
+
+    $(function(){
+        getQuestions();
+        updateProgress();
+    })
+</script>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    layui.use(['form','jquery'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+    });
+    $(document).ready(function(){
+        $("#storage").on('click',function () {
+        })
+    });
+</script>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+      var form = layui.form;
+      form.render();
+      //监听提交
+      form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+      });
+    });
+</script>
+{% endblock %}

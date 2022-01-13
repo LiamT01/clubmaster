@@ -175,35 +175,40 @@ def data_visualization():
             node_club.append({"id": club.name, "name": club.name,
                               "category": cate_id, "value": 1+len(club.members.all()),
                               "x": pos_rd(), "y": pos_rd()})
-            node_member[club.creator.id] = {"id": club.creator.id, "name": "user",
-                                            "value": [cate_id], "x": pos_rd(), "y": pos_rd()}
-            links.append({"source": club.creator.id, "target": club.name})
+            if node_member.get(club.creator.id) is None:
+                node_member[club.creator.id] = {"id": club.creator.id, "name": "user",
+                                                "value": [], "x": pos_rd(), "y": pos_rd()}
+            node_member[club.creator.id]["value"].append(cate_id)
+            links.append({"source": club.name, "target": club.creator.id})
             for member in club.members.all():
                 if node_member.get(member.id) is None:
                     node_member[member.id] = {"id": member.id, "name": "user",
                                               "value": [], "x": pos_rd(), "y": pos_rd()}
                 node_member[member.id]["value"].append(cate_id)
-                links.append({"source": member.id, "target": club.name})
+                links.append({"source":club.name , "target": member.id})
 
     club_max_val = max([c['value'] for c in node_club])
-    mem_max_val = [club_max_val]
+    mem_max_val = []
     for memid in node_member.keys():
         node_mem = node_member[memid]
         value_count = Counter(node_mem["value"])
-        node_mem["category"] = list(value_count.keys())[np.argmax(value_count.values())]
+        node_mem["category"] = list(value_count.keys())[np.argmax(list(value_count.values()))]
         node_mem["value"] = len(node_mem["value"])
         mem_max_val.append(node_mem["value"])
-    max_val = max(mem_max_val)
-    top_size = 25
+    mem_max_val = max(mem_max_val)
+    csym_size, msym_size = [20, 10], [1,10]
     for c in node_club:
-        c["symbolSize"] = c["value"] / max_val * top_size
+        c["symbolSize"] = c["value"] / club_max_val * csym_size[1] + csym_size[0]
         nodes.append(c)
     for m in node_member.values():
-        m["symbolSize"] = m["value"] / max_val * top_size
+        m["symbolSize"] = m["value"] / mem_max_val * msym_size[1] + msym_size[0]
         nodes.append(m)
+    print(nodes)
     data1 = {'nodes': nodes,
             'links': links,
             'categories': categories}
     data2 = sorted([[i, ctime_club[i]] for i in ctime_club.keys()], key=lambda x:x[0])
+    max_data2 = max(ctime_club.values())
+
     return render_template('admin_templates/data_visualization.html',
-                           data1=data1, data2=data2)
+                           data1=data1, data2=data2, max_data2=max_data2)

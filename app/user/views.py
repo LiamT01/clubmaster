@@ -5,6 +5,10 @@ from .forms import SearchClubForm, Register, Login, ChangePasswordForm, NewStore
 from .. import db, admin_id
 from ..models import User, Club, Message
 from datetime import datetime
+from ..scripts.CollaborativeFiltering import ItemBasedCF
+from ..scripts.simple_rec_pro import UsersRecommend
+from ..scripts.questions import LaunchTotal
+import json
 
 
 @user.route('/')
@@ -319,3 +323,33 @@ def handle_reply_message():
     else:
         flash('该消息不存在！')
     return redirect(url_for('.messages'))
+
+
+@user.route('/recommend', methods=['GET', 'POST'])
+@login_required
+def recommend():
+    CF = ItemBasedCF()
+    CF.setup(User.query.all())
+    club_result = [Club.query.get(club_name) for club_name in CF.recommend(current_user.id)]
+
+    rec = UsersRecommend(current_user.id)
+    rec.recommend_f()
+    user_result = list(rec.rec_top_n(10))
+    user_result[0] = [User.query.get(user) for user in user_result[0]]
+    user_result = list(zip(*user_result))
+    return render_template('user_templates/recommend.html', club_result=club_result, user_result=user_result)
+
+
+@user.route('/questionnaire', methods=['GET', 'POST'])
+@login_required
+def questionnaire():
+    return render_template('user_templates/questionnaire.html', totalRound=3)
+
+
+@user.route('/handle_questionnaire', methods=['GET', 'POST'])
+@login_required
+def handle_questionnaire():
+    round = int(request.form.get('round'))
+    ans = request.form.get('ans', None)
+    questions = LaunchTotal(round, ans)
+    return jsonify(questions)

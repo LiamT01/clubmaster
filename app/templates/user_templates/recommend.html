@@ -1,0 +1,102 @@
+{% extends "user_templates/base.html" %}
+{% block title %}加入社团{% endblock %}
+
+{% block card %}<div class="layui-card-header"><h2>推荐给您的社团和成员</h2></div>{% endblock %}
+{% block body %}
+<div style="text-align: center; width: 900px;">
+  <div class="layui-tab">
+    <ul class="layui-tab-title">
+      <li class="layui-this">社团推荐</li>
+      <li>用户推荐</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+      
+      <div class="layui-tab-item layui-show">
+        <div style='text-align: center;'>
+          <div class="layui-inline">
+              <table lay-even id="result" lay-filter="re">
+                <thead>
+                  <tr>
+                    <th lay-data="{field:'club_name', width:160, align:'center'}">社团名称</th>
+                    <th lay-data="{field:'club_type', width:180, align:'center'}">社团类型</th>
+                    <th lay-data="{field:'club_creator', width:160, align:'center'}">创建者</th>
+                    <th lay-data="{field:'club_desp', width:240, align:'center'}">社团描述</th>
+                    <th lay-data="{field:'club_join', width:100, align:'center'}">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for club in club_result %}
+                    <tr>
+                      <td>{{club.name}}</td>
+                      <td>{{club.type}}</td>
+                      <td>{{club.creator.name}}</td>
+                      <td>{{club.description}}</td>
+                      {% if current_user in club.members %}
+                          <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.exit_club', name=club.name) }}';" value="退出" /></td>
+                      {% elif current_user == club.creator %}
+                          <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.delete_club', name=club.name) }}';" value="删除" /></td>
+                      {% else %}
+                          <td><input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('user.join_club', name=club.name) }}';" value="加入" /></td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="layui-tab-item">
+
+        <div class="layui-tab-item layui-show">
+          <div style='text-align: center;'>
+            <div class="layui-inline">
+                <table lay-even id="result" lay-filter="re">
+                  <thead>
+                    <tr>
+                      <th lay-data="{field:'user_id', width:160, align:'center'}">用户学号</th>
+                      <th lay-data="{field:'user_name', width:180, align:'center'}">用户姓名</th>
+                      <th lay-data="{field:'user_joined_clubs', width:180, align:'center'}">推荐理由</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for result in user_result %}
+                      <tr>
+                        <td>{{result[0].id}}</td>
+                        <td>{{result[0].name}}</td>
+                        <td>{{result[1]}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    layui.use(['form','table','jquery'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.$;
+
+        table.init('re', {
+              height: 390
+              ,limit: 7
+              ,page: true
+        });
+    });
+    </script>
+    <script type="text/html" id="barDemo">
+      <a class="layui-btn layui-btn-sm" lay-event="borr">加入</a>
+    </script>
+{% endblock %}
+
