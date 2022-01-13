@@ -84,7 +84,7 @@ def about_us():
     allsum = {'users': len(User.query.all()),
               'clubs': len(Club.query.all()),
               'activities': len(Activity.query.all())}
-    joinednum = [{'num': sum([len(club.members.all())
+    joinednum = [{'num': sum([1+len(club.members.all())
                               for club in Club.query.filter_by(type=clubtype).all()]),
                   'type': clubtype}
                  for clubtype in all_club_types]

@@ -14,7 +14,6 @@
 <div class="layui-row layui-col-space50">
   <div class="layui-col-md4">
       <div id="container1" style="height: 500%"></div>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
       <script type="text/javascript">
           var myChart = echarts.init(document.getElementById("container1"));
           var data_all = {{ charts1|safe }};
@@ -61,7 +60,6 @@
   </div>
   <div class="layui-col-md4" style="margin-top: 25px;">
     <div id="container2" style="height: 400%"></div>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById("container2"));
         var data = {{ charts2|safe }};
@@ -90,7 +88,6 @@
   </div>
   <div class="layui-col-md4">
       <div id="container3" style="height: 500%"></div>
-      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
       <script type="text/javascript">
           var myChart = echarts.init(document.getElementById("container3"));
           var data = {{ charts3|safe }}

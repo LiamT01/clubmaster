@@ -1,0 +1,118 @@
+{% extends "admin_templates/base.html" %}
+{% block title %}数据可视化{% endblock %}
+{% block card %}<div class="layui-card-header"><h2>网站数据总览</h2></div>{% endblock %}
+{%  block body %}
+<div class="layui-tab">
+  <ul class="layui-tab-title">
+    <li class="layui-this">用户-社团关系图</li>
+    <li>网站活跃度预览</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+        <div id="container1" style="height: 500%"></div>
+        <script type="text/javascript">
+            var myChart = echarts.init(document.getElementById("container1"));
+            var graph = {{ data1|safe }};
+            graph.nodes.forEach(function (node) {
+                node.label = {
+                  show: node.symbolSize < 0
+                };
+              });
+            myChart.setOption({
+                title: {},
+                tooltip: {},
+                legend: [
+                  {
+                    // selectedMode: 'single',
+                    data: graph.categories.map(function (a) {
+                      return a.name;
+                    })
+                  }
+                ],
+                animationDuration: 1500,
+                animationEasingUpdate: 'quinticInOut',
+                series: [
+                  {
+                    type: 'graph',
+                    layout: 'none',
+                    data: graph.nodes,
+                    links: graph.links,
+                    categories: graph.categories,
+                    roam: true,
+                    label: {
+                      position: 'right',
+                      formatter: '{b}'
+                    },
+                    lineStyle: {
+                      color: 'source',
+                      curveness: 0.3
+                    },
+                    emphasis: {
+                      focus: 'adjacency',
+                      lineStyle: {
+                        width: 10
+                      }
+                    }
+                  }
+                ]
+              });
+        </script>
+    </div>
+    <div class="layui-tab-item layui-show">
+        <div id="container2" style="height: 500%"></div>
+        <script type="text/javascript">
+            var myChart = echarts.init(document.getElementById("container2"));
+            var data = {{ data2|safe }};
+            const dateList = data.map(function (item) {
+              return item[0];
+            });
+            const valueList = data.map(function (item) {
+              return item[1];
+            });
+            myChart.setOption({
+              visualMap: [
+                {
+                  show: false,
+                  type: 'continuous',
+                  seriesIndex: 0,
+                  min: 0,
+                  max: 400
+                },
+              ],
+              title: [
+                {
+                  left: 'center',
+                  text: '社团创建活跃度'
+                }
+              ],
+              tooltip: {
+                trigger: 'axis'
+              },
+              xAxis: [
+                {
+                  data: dateList
+                },
+              ],
+              yAxis: [
+                {},
+              ],
+              grid: [
+                {
+                  bottom: '60%'
+                }
+              ],
+              series: [
+                {
+                  type: 'line',
+                  showSymbol: false,
+                  data: valueList
+                },
+              ]
+            });
+        </script>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+    

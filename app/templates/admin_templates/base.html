@@ -8,6 +8,7 @@
   <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
   <style>
       .alert{position:relative;padding:.75rem 1.25rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
       .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
@@ -56,6 +57,9 @@
         </li>
         <li class="layui-nav-item">
           <a href="{{ url_for('admin.search') }}">社团查询</a>
+        </li>
+        <li class="layui-nav-item">
+          <a href="{{ url_for('admin.data_visualization') }}">网站数据总览</a>
         </li>
       </ul>
     </div>

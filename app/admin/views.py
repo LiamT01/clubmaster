@@ -3,8 +3,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 from . import admin
 from .forms import SearchClubForm, Register, Login, ChangePasswordForm, NewStoreForm, EditInfoForm
 from .. import db
-from ..models import User, Club, Message
-
+from ..models import User, Club, Message, Activity
+import random, time
+from collections import Counter
+import numpy as np
 
 @admin.route('/')
 @admin.route('/index')
@@ -148,3 +150,60 @@ def handle_reply_message():
     else:
         flash('该消息不存在！')
     return redirect(url_for('.messages'))
+
+def timestamp2str(timestamp):
+    return '{:%Y-%m-%d %H:%M}'.format(timestamp)
+
+def pos_rd():
+    return random.random() * 800 - 400
+
+@admin.route('/data_visualization', methods=['GET', 'POST'])
+@login_required
+def data_visualization():
+    clubform = SearchClubForm()
+    all_club_types = clubform.club_type.choices[1:]
+    nodes, links, categories = [], [], []
+    node_member, node_club = {}, []
+    ctime_club = {}
+    for clubtype in all_club_types:
+        categories.append({'name':clubtype})
+        cate_id = len(categories) - 1
+        for club in Club.query.filter_by(type=clubtype).all():
+            if ctime_club.get(timestamp2str(club.timestamp)) is None:
+                ctime_club[timestamp2str(club.timestamp)] = 0
+            ctime_club[timestamp2str(club.timestamp)] += 1
+            node_club.append({"id": club.name, "name": club.name,
+                              "category": cate_id, "value": 1+len(club.members.all()),
+                              "x": pos_rd(), "y": pos_rd()})
+            node_member[club.creator.id] = {"id": club.creator.id, "name": "user",
+                                            "value": [cate_id], "x": pos_rd(), "y": pos_rd()}
+            links.append({"source": club.creator.id, "target": club.name})
+            for member in club.members.all():
+                if node_member.get(member.id) is None:
+                    node_member[member.id] = {"id": member.id, "name": "user",
+                                              "value": [], "x": pos_rd(), "y": pos_rd()}
+                node_member[member.id]["value"].append(cate_id)
+                links.append({"source": member.id, "target": club.name})
+
+    club_max_val = max([c['value'] for c in node_club])
+    mem_max_val = [club_max_val]
+    for memid in node_member.keys():
+        node_mem = node_member[memid]
+        value_count = Counter(node_mem["value"])
+        node_mem["category"] = list(value_count.keys())[np.argmax(value_count.values())]
+        node_mem["value"] = len(node_mem["value"])
+        mem_max_val.append(node_mem["value"])
+    max_val = max(mem_max_val)
+    top_size = 25
+    for c in node_club:
+        c["symbolSize"] = c["value"] / max_val * top_size
+        nodes.append(c)
+    for m in node_member.values():
+        m["symbolSize"] = m["value"] / max_val * top_size
+        nodes.append(m)
+    data1 = {'nodes': nodes,
+            'links': links,
+            'categories': categories}
+    data2 = sorted([[i, ctime_club[i]] for i in ctime_club.keys()], key=lambda x:x[0])
+    return render_template('admin_templates/data_visualization.html',
+                           data1=data1, data2=data2)
