@@ -25,7 +25,7 @@
           <input type="checkbox" name="like[dai]" title="发呆">
         </div>
     </div>
-    <div class="layui-form-item question">
+    <div class="layui-form-item button">
         <div class="layui-input-block" style="text-align: center;">
             <button type="button" class='layui-btn' id='submit'>提交</button>
         </div>
@@ -39,62 +39,96 @@
     let currentRound = 1;
 
     function updateProgress(){
-        let percentage = (currentRound / {{ totalRound }} * 100).toFixed(2).toString() + '%';
+        let percentage = ((currentRound-1) / {{ totalRound }} * 100).toFixed(2).toString() + '%';
         $('#progress').attr('lay-percent', percentage);
         layui.element.render('progress');
     }
 
     function getAns(){
-        for (question in $('#form').children('div[class="layui-form-item question"]')) {
-            console.log($('#form').children().length)
-        }
+        var ans={};
+        var cnt=0;
+            $(".question").each(function(){
+                cnt += ($(this).children('.layui-input-block')
+                              .children(':input:checked').length>0);
+                ans[$(this).attr('id')] = [];
+                $(this).children('.layui-input-block').children(':input:checked').each(
+                    function(){
+                        {#str += $(this).parent().parent().attr('id')+',';#}
+                        ans[$(this).parent().parent().attr('id')].push($(this).attr("name"));
+                    }
+                );
+            });
+            console.log($(".question").length);
+            if (cnt<$(".question").length) {
+                alert("确认一下是不是全部填写完成了");
+                return false;
+            }
+
+            return ans;
     }
 
-    function getQuestions(round, ans){
+    function getQuestions(ans){
         $.post(
-            "{{ url_for('user.handle_questionnaire') }}",
-            {
-                'round': 1,
-                'ans': ans
-            },
-            function(data, status){
-                $('.question').remove();
-                for (i = 1; i <= data[1].length; i++) {
-                    _question = $('<div class="layui-form-item question"></div>').attr('id', data[1][i - 1]);
-                    _options = $('<div class="layui-input-block"></div>');
-    
-                    let query = data[2][i.toString()]['query'];
-                    _question.append($('<label class="">' + i + '. ' + query + '</label>').css({
-                        'width': '300px',
-                        'text-align': 'left',
-                        'font-size': '15px'
-                    }));
+        "{{ url_for('user.handle_questionnaire') }}",
+        {
+            'round': currentRound,
+            'ans': JSON.stringify(ans)
+        },
+        function(data, status){
+            $('.question').remove();
+            $('.button').remove();
+            for (i = 1; i <= data[1].length; i++) {
+                _question = $('<div class="layui-form-item question"></div>').attr('id', data[1][i - 1]);
+                _options = $('<div class="layui-input-block"></div>');
 
-                    let options = data[2][i.toString()]['options'];
-                    for (option in options) {
-                        _options.append(
-                            $("<input></input>").attr({
-                                type: 'checkbox',
-                                name: option,
-                                title: options[option]
-                            })
-                            );
-                    }
-                    _question.append(_options).append('</br>');
-                    $('#form').append(_question);          
+                let idx = data[1][i - 1].toString();
+                let query = data[2][idx]['query'];
+                _question.append($('<label class="">' + i + '. ' + query + '</label>').css({
+                    'width': '300px',
+                    'text-align': 'left',
+                    'font-size': '15px'
+                }));
+
+                let options = data[2][idx]['options'];
+                for (option in options) {
+                    _options.append(
+                        $("<input></input>").attr({
+                            type: 'checkbox',
+                            name: option,
+                            title: options[option]
+                        })
+                        );
                 }
-                $('#form').append(
-                    $('<div></div>').attr('class', 'layui-input-block')
+                _question.append(_options).append('</br>');
+                $('#form').append(_question);
+            }
+            $('#form').append(
+                $('<div></div>').attr('class', 'layui-form-item button')
+                                .append(
+                                    $('<div></div>')
+                                    .attr('class', 'layui-input-block')
                                     .css('text-align', 'center')
-                                    .append('<button type="button" class="layui-btn" id="submit">提交</button>')
-                                    .click(function(){
-                                        currentRound += 1;
-                                        updateProgress();
+                                    .append(
+                                        $('<button type="button" class="layui-btn" id="submit">提交</button>')
+                                        .click(function(){
                                         ans = getAns();
-                                    })
-                )
-                layui.form.render(); // !!!!!!!IMPORTANT
-            }); 
+                                        if (ans){
+                                            currentRound += 1;
+                                            updateProgress();
+                                            {#$('#submit').parent().parent().remove();#}
+                                            if (currentRound <= 3) {
+                                                getQuestions(ans);
+                                            }
+                                            else {
+                                                alert('感谢您的参与！');
+                                                location.href = "{{ url_for('user.index') }}";
+                                            }
+                                        }})
+                                    )
+                                )
+            )
+            layui.form.render(); // !!!!!!!IMPORTANT
+        });
     }
 
     $(function(){

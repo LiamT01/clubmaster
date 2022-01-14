@@ -84,10 +84,18 @@ def about_us():
     allsum = {'users': len(User.query.all()),
               'clubs': len(Club.query.all()),
               'activities': len(Activity.query.all())}
-    joinednum = [{'num': sum([1+len(club.members.all())
-                              for club in Club.query.filter_by(type=clubtype).all()]),
-                  'type': clubtype}
-                 for clubtype in all_club_types]
+
+    joinednum = []
+    for clubtype in all_club_types:
+        joindmem = {}
+        for club in Club.query.filter_by(type=clubtype).all():
+            joindmem[club.creator.id] = 0
+            for m in club.members.all():
+                joindmem[m.id] = 0
+        joinednum.append({'num': len(joindmem), 'type': clubtype})
+
+
+
     return render_template('main_templates/about_us.html',
                            charts1=typenum,
                            charts2=joinednum,

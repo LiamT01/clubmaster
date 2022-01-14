@@ -67,6 +67,8 @@ def delete_club():
             message.state = 'waiting'
             message.phase = 'reply'
             db.session.add(message)
+        for activity in club.activities.all():
+            db.session.delete(activity)
         db.session.delete(club)
         db.session.commit()
         flash('社团删除成功！')
@@ -203,7 +205,6 @@ def data_visualization():
     for m in node_member.values():
         m["symbolSize"] = m["value"] / mem_max_val * msym_size[1] + msym_size[0]
         nodes.append(m)
-    print(nodes)
     data1 = {'nodes': nodes,
             'links': links,
             'categories': categories}

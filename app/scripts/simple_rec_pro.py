@@ -50,6 +50,8 @@ class UsersRecommend:
         p_rec = []
         for i in range(len(recommends)):
             p_rec.append(recommends[i]['score'])
+        if np.sum(p_rec) == 0:
+            return [], []
         p_rec = p_rec/np.sum(p_rec)
         """
         index = np.array([i for i in range(n)])

@@ -68,7 +68,7 @@
                     <td>{{ act.members.all()|length }}</td>
                     <td>
                         {% if session['role'] == 'member' %}
-                            {% if act in current_user.as_member.joined_activities %}
+                            {% if act in current_user.joined_activities %}
                             <input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('club.exit_activity', name=act.name) }}';" value="退出" />
                             {% else %}
                             <input class="layui-btn layui-btn-xs layui-btn-primary" type="button" onclick="location.href='{{ url_for('club.join_activity', name=act.name) }}';" value="加入" />

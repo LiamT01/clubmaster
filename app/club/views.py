@@ -56,6 +56,8 @@ def delete_club():
         message.state = 'done'
         message.phase = 'reply'
         db.session.add(message)
+        for activity in club.activities.all():
+            db.session.delete(activity)
         db.session.delete(club)
         db.session.commit()
         session['cclubs'].remove(club.name)

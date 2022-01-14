@@ -7,7 +7,7 @@ from ..models import User, Club, Message
 from datetime import datetime
 from ..scripts.CollaborativeFiltering import ItemBasedCF
 from ..scripts.simple_rec_pro import UsersRecommend
-from ..scripts.questions import LaunchTotal
+from ..scripts.forf import LaunchTotal
 import json
 
 
@@ -184,7 +184,7 @@ def delete_club():
 @user.route('/exit_club', methods=['GET', 'POST'])
 @login_required
 def exit_club():
-    club = Club.query.get(session['club_name'])
+    club = Club.query.get(request.args.get('name'))
     if club:
         message = Message()
         message.sender = current_user
@@ -194,7 +194,7 @@ def exit_club():
         message.type = 'exit_club'
         message.phase = 'reply'
 
-        for activity in club.activities:
+        for activity in club.activities.all():
             if current_user in activity.members.all():
                 activity.members.remove(current_user)
 
@@ -330,7 +330,11 @@ def handle_reply_message():
 def recommend():
     CF = ItemBasedCF()
     CF.setup(User.query.all())
-    club_result = [Club.query.get(club_name) for club_name in CF.recommend(current_user.id)]
+    reconmend_res = CF.recommend(current_user.id)
+    if reconmend_res is None:
+        club_result = []
+    else:
+        club_result = [Club.query.get(club_name) for club_name in reconmend_res]
 
     rec = UsersRecommend(current_user.id)
     rec.recommend_f()
@@ -350,6 +354,7 @@ def questionnaire():
 @login_required
 def handle_questionnaire():
     round = int(request.form.get('round'))
-    ans = request.form.get('ans', None)
+    ans = eval(request.form.get('ans', '{}'))
+    print(ans)
     questions = LaunchTotal(round, ans)
     return jsonify(questions)
